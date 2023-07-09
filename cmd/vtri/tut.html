@@ -1,0 +1,328 @@
+<html>
+<title>
+tut
+</title>
+<body BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000FF" VLINK="#330088" ALINK="#FF0044">
+<H1>TEA - Time Element Attribute
+</H1>
+<DL><DD><I>Caerwyn Jones<br>
+caerwyn@computer.org<br>
+</I></DL>
+<DL><DD><H4>ABSTRACT</H4>
+A tutorial for 
+<TT>tea</TT>,
+a tool for managing time varying data.
+<TT>Tea</TT>
+annotates the file
+name space with attributes and links files
+in binary relations.
+</DL>
+<H4>Tutorial
+</H4>
+<P>
+Begin by setting the TDB environment variable to a directory
+where your attribute files will be stored.
+<DL><DT><DD><TT><PRE>
+% TDB=/usr/glenda/tea
+</PRE></TT></DL>
+<TT>9ls</TT>
+is a slight modification on 
+<TT>ls</TT>(1).
+The default output format prints
+a triad of time, element, and attribute, where time is the file's
+modification time in seconds since the epoch, element is the absolute
+filename and attribute is file size in bytes.  With the -e flag it
+prints the current clock time instead of modification time.  The time
+value becomes the effective valid time for queries using tea.
+<DL><DT><DD><TT><PRE>
+% 9ls /bin/tdbjoin
+1058049198	/bin/tdbjoin	
+</PRE></TT></DL>
+Say we want to add a description of this file to the tea database
+<DL><DT><DD><TT><PRE>
+% 9ls /bin/tdbjoin |tea 'desc="temporal database join"'
+1058049198	/bin/tdbjoin	temporal database join
+</PRE></TT></DL>
+<TT>Desc</TT>
+is the name we chose for the new attribute and we assigned the
+string to the attribute with  time and element taken from standard input.
+</P>
+<P>
+To view the descriptions of all files in /bin
+<DL><DT><DD><TT><PRE>
+% 9ls /bin |tea desc
+1058049198	/bin/tdbjoin	temporal database join
+</PRE></TT></DL>
+We have only added one description so we only get one record.  The
+output from tea is a triad with the named attribute substituting the
+input attribute.
+</P>
+<P>
+Lets change the description slightly making a new description valid
+at the current time
+<DL><DT><DD><TT><PRE>
+% 9ls -e /bin/tdbjoin |tea 'desc="join primitive used by tea"'
+1058062608	/bin/tdbjoin	join primitive used by tea
+</PRE></TT></DL>
+What do we get when we query the 'desc' attribute?
+<DL><DT><DD><TT><PRE>
+% 9ls /bin/tdbjoin |tea desc
+1058049198	/bin/tdbjoin	temporal database join
+</PRE></TT></DL>
+The effective valid time (EVT) for the query is still the modification
+time of the file.  Add the -e flag to get the current 
+<TT>desc</TT>
+value.
+Or 
+<TT>touch</TT>(1)
+the file before running the query again.
+<DL><DT><DD><TT><PRE>
+% 9ls -e /bin/tdbjoin |tea desc
+1058062608	/bin/tdbjoin	join primitive used by tea
+</PRE></TT></DL>
+</P>
+<P>
+The attributes are stored in
+files below the directory pointed to by
+<TT>TDB</TT>.
+New files are created as new
+attributes are named and values assigned to them.
+<DL><DT><DD><TT><PRE>
+% ls <I>TDB
+/usr/glenda/tea/desc
+</I></PRE></TT></DL>
+We now want to see all descriptions created for the file, not just
+the currently effective 'desc'.
+<DL><DT><DD><TT><PRE>
+% 9ls /bin/tdbjoin |tea desc+
+1058049198	/bin/tdbjoin	temporal database join
+1058049198	/bin/tdbjoin	join primitive used by tea
+</PRE></TT></DL>
+The '+' suffix implies one of more entries. Some more
+suffixes that alter the join with the attributes are listed below:
+<br><img src="tut.2630.gif"><br>
+The query prints the effective attribute value using the effective
+valid time of the elements selected by 
+<TT>9ls</TT>.
+In the examples above 
+the EVT was the modification time of 
+<TT>/bin/tdbjoin</TT>.
+</P>
+<P>
+Let us view the valid times of the attribute values, that is, the valid
+times that were assigned when they were inserted.
+<DL><DT><DD><TT><PRE>
+% 9ls /bin/tdbjoin |tea desc+%
+1058049198	/bin/tdbjoin	temporal database join
+1058062524	/bin/tdbjoin	join primitive used by tea
+</PRE></TT></DL>
+The '%' suffix says we want the effective valid time of the attribute
+value.  Let us delete that last entry to make the original the
+effective value again.  Think of the database as append only.  We will
+add another record to the database with the same time, element, and
+attribute value as the last entry.  This toggles the existence of that
+entry.  This 'delete' entry will have it's own transaction time, so by
+changing our effective transaction time (ETT) we can go back in
+history to view the attributes before we deleted them.  The default
+effective transaction time is the current time.
+<DL><DT><DD><TT><PRE>
+% 9ls -e /bin/tdbjoin |tea 'desc% desc=_'
+1058062524	/bin/tdbjoin	join primitive used by tea
+% 9ls  /bin/tdbjoin |tea desc+
+1058049198	/bin/tdbjoin	temporal database join
+</PRE></TT></DL>
+The underscore '_' in the assignment statement means assign the standard input
+to the named attribute, and the input in this case is the valid time, element
+and attribute of the currently effective 
+<TT>desc</TT>
+attribute.
+</P>
+<P>
+Say we want to go back in history before deleting that last entry. Just
+set the 
+<TT>ETT</TT>
+environment variable to a time prior to the deletion. Unset
+the 
+<TT>ETT</TT>
+to return to the present.
+<DL><DT><DD><TT><PRE>
+% ETT=1058062520
+% 9ls -e /bin/tdbjoin |tea desc+
+1058049198	/bin/tdbjoin	temporal database join
+1058062524	/bin/tdbjoin	join primitive used by tea
+% ETT=()
+</PRE></TT></DL>
+</P>
+<P>
+Let us create a relation between a binary file and it's source directory
+and let us create descriptions for both files and assign an author.
+<DL><DT><DD><TT><PRE>
+% 9ls -e /bin/acme |tea 'src="/sys/src/cmd/acme"'
+1058063753	/bin/acme	/sys/src/cmd/acme
+
+% 9ls -de /sys/src/cmd/acme /bin/acme |\
+tea 'desc="interactive text windows"'
+1058064170	/bin/acme	interactive text windows
+1058064170	/sys/src/cmd/acme	interactive text windows
+
+% 9ls -de /sys/src/cmd/acme |tea 'author="rob pike"'
+1058064216	/sys/src/cmd/acme	rob pike
+</PRE></TT></DL>
+The assignments to 
+<TT>desc</TT>
+and
+<TT>author</TT>
+could have been combined to form the command,
+<DL><DT><DD><TT><PRE>
+tea 'desc="interactive text windows" author="rob pike"'.
+</PRE></TT></DL>
+</P>
+<P>
+We can now query on 
+<TT>/bin/acme</TT>
+and find it's source and author.
+<DL><DT><DD><TT><PRE>
+% 9ls -e /bin/acme |tea 'src. author'
+1058064442	/sys/src/cmd/acme	rob pike
+</PRE></TT></DL>
+The '.'  dot suffix to the 
+<TT>src</TT>
+attribute is used to substitute the
+attribute value in place of the element value in the output.  We then
+further join with the 
+<TT>author</TT>
+attribute, which because it has no suffix
+performs the default action of changing the input attribute value to
+the effective value of the named attribute on output.
+</P>
+<P>
+This combination of attributes in the tea command line can be thought
+of as a pipeline (which is in fact how it is implemented by tea).  An
+attribute and any suffixes filter the input for the next attribute in
+the line.  Each attribute in the line only acts on the triad, the
+first three values separated by tabs in the input.
+</P>
+<P>
+To list the values of more than one attribute place a comma between
+attribute names.
+<DL><DT><DD><TT><PRE>
+% 9ls -e /bin/acme |tea 'src, desc, author'
+</PRE></TT></DL>
+</P>
+<H4>The Valid Time Line
+</H4>
+<P>
+The effective valid time (EVT) is the first value in the triad.  When
+data is assigned to an attribute the EVT is used to set the start time
+for the attribute: the time when it becomes valid.  (Internally there
+is also a transaction time which cannot be controlled by the user.)
+</P>
+<P>
+What then is the end time?
+</P>
+<P>
+The end time depends on the interpretation of an attribute, and this
+interpretation is set by the suffix flags we append to the attribute
+name in our tea query.
+</P>
+<P>
+In one of our examples above the second assignment to desc for the
+<TT>/bin/tdbjoin</TT>
+element meant the new value became the effective value.
+This is the default interpretation: The new value's start time becomes
+the end time for the last attibute of the same element.  This implies
+a one-to-one relationship between element and attribute values.
+</P>
+<P>
+A one-to-many can also be implemented by using '+' and '*' flags.  But
+say we want to explicitly set the end time for an element attribute
+pair.  This is done by inserting the same element and attribute values
+twice but with different valid times.  The earlier time is the start
+and the later time is the end.  The validity of the element attribute
+pair is toggled along the valid time line with each new instance of
+the pair.  Use the '^' symbol as the flag to support the toggle of the
+valid time line.
+<DL><DT><DD><TT><PRE>
+% 9ls /club |tea 'members^'
+</PRE></TT></DL>
+</P>
+<P>
+We can also query the valid time line without listing the elements
+first using 9ls.  For example, say we want to see all elements in the
+<TT>desc</TT>
+attribute that were assigned today.
+<DL><DT><DD><TT><PRE>
+% tea desc:
+</PRE></TT></DL>
+The ':' colon suffix begins a range query. A range is similar to
+an address within ed or sam. In place of line numbers we have
+dates in yyyymmdd format where yyyy and mm and dd are optional and
+default to the current year and month and day. Here are some examples
+<DL><DT><DD><TT><PRE>
+# All elements in desc
+% tea desc:,
+# All elements in the January of the current year
+% tea desc:0101,0201
+# Elements on the 1st of the current month
+% tea desc:1
+# Elements in 2002
+% tea desc:20020101,20030101
+</PRE></TT></DL>
+A range query is a select operation and replaces the 9ls and begins
+at the front of a tea query. 
+
+</P>
+<H4>Implementation
+</H4>
+<P>
+The attribute files are Btrees.  A file contains a header block and a
+sequence of data blocks each containing an array of entries.  The
+entries are variable length and each block has a rudimentary form of
+compression, whereby contiguous like keys and values are collapsed.
+Each entry is stored in 3 inversions with each inversion sorted on
+time, element, and attribute, respectively.
+</P>
+<P>
+The comparision algortihm 
+<TT>acomp</TT>()
+is taken from Plan9 
+<TT>look.c</TT>.
+The
+<TT>pack</TT>
+and 
+<TT>unpack</TT>,
+<TT>GBIT</TT>,
+<TT>PBIT</TT>,
+and 
+<TT>convE2M</TT>
+<TT>convM2E</TT>
+routines are all derived from
+Plan9 source.
+The implementation of search and insert for the Btree is derived from
+Sedgewick, 
+<I>Algorithms in C</I>.
+The hash, growable array and symbol table are taken from 
+<I>The Practice of Programming</I>,
+Pike and Kernighan.
+Some of the prinicples of Binary relations and Btrees are from 
+Knuth, 
+<I>The Art of Programming</I>;
+N.Rishe, 
+<I>Database Design: The Semantic Modeling Approach</I>;
+Nevathe, Elmasri, 
+<I>Fundamentals of Database Systems</I>.
+<TT>9ls</TT>
+is taken from Plan9 source of 
+<TT>ls.c</TT>.
+</P>
+<P>
+My own contribution is the application of the Time Element Attribute
+triad, the standard join condition for the temporal joins, and the
+concepts for the Valid Time line.
+</P>
+<P>
+Many thanks go to the authors of Plan 9.
+</P>
+<br>&#32;<br>
+Copyright &#169; 2003 Caerwyn Jones.  All rights reserved.
+</body></html>

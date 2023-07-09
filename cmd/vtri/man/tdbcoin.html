@@ -1,0 +1,24 @@
+<HEAD>
+<TITLE>Plan 9 man page</TITLE>
+<META content="text/html; charset=utf-8" http-equiv=Content-Type>
+</HEAD>
+<BODY BGCOLOR=WHITE>
+   <br>
+<H4>NAME     <br></H4>
+<DL><DT><DD>tdbcoin - coincident join, temporal database operator<br>
+</DL><H4>SYNOPSIS     <br></H4>
+<DL><DT><DD><TT>tdbcoin </TT>[ <EM>-123d </EM>] <EM>file<br>
+</EM></DL><H4>DESCRIPTION     <br></H4>
+<DL><DT><DD><EM>Tdbcoin </EM>reads triads from standard input of the same format as <A HREF="tdbjoin.html"><EM>tdbjoin</EM>(1),</A> and performs a coincident join between the input triad and the temporal relation stored in <EM>file </EM>created by <A HREF="tdbadd.html"><EM>tdbadd</EM>(1).</A>  <P>
+A coincident join finds the nearest neighbor, either before or after, of the triad along the valid time line.  <P>
+The following options are recognized.<br>
+<TT>-</TT><EM>n&nbsp;&nbsp;&nbsp;&nbsp;</EM>where <EM>n </EM>is inversion 1, 2, or 3 of the triad to use to find the coincident entry. 1st inversion, the default, uses only the effective valid time of the triad to locate an entry in the file. 2nd inversion restricts the valid time line to entries matching the element of the triad, and then uses the effective valid time to locate
+</DL><DL><DT><DD><DL><DT><DD><DL><DT><DD>the nearest neighbor. 3rd inversion is the same as 2nd but uses the attribute of the triad to restrict the valid time line.<br>
+</DL></DL><TT>-d&nbsp;&nbsp;&nbsp;&nbsp;</TT>Print the entry following the triad along the valid time line. The default is to print the preceding entry.<br>
+</DL><H4>EXAMPLES     <br></H4>
+<DL><DT><DD>If <EM>task </EM>is a temporal relation containing a log of personal activity, the following prints the tasks you were working on when files in <TT>/bin </TT>were last modified.<br>
+</DL><DL><DT><DD><DL><DT><DD><TT><DL><DT><DD>9ls /bin |tdbcoin task<br>
+</TT></DL></DL></DL><H4>SEE ALSO     <br></H4>
+<A HREF="/magic/man2html/1/tdbadd"><DL><DT><DD><EM>tdbadd</EM>(1),</A> <A HREF="tdbjoin.html"><EM>tdbjoin</EM>(1),</A> <A HREF="9ls.html"><EM>9ls</EM>(1)<br></A>
+</DL>
+</BODY></HTML>

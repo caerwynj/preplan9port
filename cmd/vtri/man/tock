@@ -1,0 +1,36 @@
+.TH TOCK 1
+.SH NAME
+tock - sum values of temporal triads
+.SH SYNOPSIS
+.B tock
+[
+.I -rp
+]
+.SH DESCRIPTION
+.I Tock
+sums values of temporal triads having the same key, read
+from standard input. This has the effect of
+collapsing the set of triads printing out a unique set of keys
+with the sum of their respective values. The effective date
+of the unique triad is the latest date for that key.
+.PP
+The option
+.I -r
+works on keys that form pathnames. The values from all
+child pathnames are added to the parent, so the value
+of the root, 
+.IR / ,
+will be the sum of all triad values.
+.PP
+The option 
+.I -p
+works similar to 
+.I -r
+processing pathnames, but instead prints
+the proportion each child is of the parents total.
+.SH SOURCE
+.B /home/xcs0998/cmd/tock
+.SH "SEE ALSO"
+.IR tri (1),
+.IR ni (1),
+.IR ty (1)

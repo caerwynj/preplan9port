@@ -1,0 +1,22 @@
+.TH TDBDUMP 1
+.SH NAME
+tdbdump - print textual representation of temporal relation
+.SH SYNOPSIS
+.B tdbdump
+.I file
+.SH DESCRIPTION
+.I Tdbdump
+outputs a textual representation for the temporal relation
+stored in 
+.IR file .
+The output format is four tab separated fields:
+.LR transaction-time ,
+.LR valid-time ,
+.LR element ,
+and 
+.LR attribute .
+This format is suitable for input to 
+.IR tdbadd (1).
+.SH "SEE ALSO"
+.IR tdbjoin (1),
+.IR tdbadd (1)

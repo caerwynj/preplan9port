@@ -1,0 +1,8 @@
+ROOT=/home/xcs0998
+SYSHOST=Solaris
+SYSTARG=$SYSHOST
+OBJTYPE=sparc
+OBJDIR=$SYSTARG/$OBJTYPE
+
+<$ROOT/src/mkfiles/mkhost-$SYSHOST
+<$ROOT/src/mkfiles/mkfile-$SYSTARG-$OBJTYPE

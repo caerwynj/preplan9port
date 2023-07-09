@@ -1,0 +1,22 @@
+</$objtype/mkfile
+
+TARG=\
+	tdbadd\
+	tdbcoin\
+	tdbexpr\
+	tdbjoin\
+	tdblook\
+	secs\
+	tock\
+	9ls\
+
+OFILES=\
+	btree.$O\
+	ni.$O\
+
+HFILES=btree.h
+BIN=$home/bin/$objtype
+</sys/src/cmd/mkmany
+
+$O.tock:	tock.$O
+	$LD	$LDFLAGS -o $target $prereq

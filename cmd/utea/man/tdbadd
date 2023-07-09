@@ -1,0 +1,78 @@
+.TH TY 1
+.SH NAME
+tdbadd - insert records into a temporal relation
+.SH SYNOPSIS
+.B tdbadd
+[
+.I -123p
+]
+.I file
+[
+.I attribute
+]
+.SH DESCRIPTION
+.I Tdbadd
+inserts records read from standard input
+into the temporal relation stored in
+.IR file .
+.PP
+If
+.I file
+does not exist it will be created.
+.PP
+The temporal relation in
+.I file
+is a Btree with each entry containing the fields
+transaction time, valid time, element, and attribute.
+.PP
+Input fields are separated by tabs, and records
+are separated by lines. The input fields are the
+same as those for the temporal relation, but
+with tranasaction time, valid time and attribute optional.
+Transaction time and valid time default to the current time
+if they are not read from input.
+.PP
+The possible combination of inputs are the following:
+.TP
+1 field
+element
+.TP
+2 fields
+element attribute
+.TP
+3 fields
+valid-time element attribute
+.TP
+4 fields
+transaction-time valid-time element attribute
+.PP
+If an
+.I attribute
+value is supplied on the command line, it is used in place of any attribute
+value from standard input.
+.PP
+There are three possible inversions in which to store
+the entry. The entry is added to each inversion specified
+as an option.
+.PP
+The
+.I -p
+option prints the records that are inserted to standard output,
+so the command can appear in the middle of a pipeline.
+.PP
+Each entry in a relation should be unique on the four fields,
+though this is not enforced. To 
+.I delete
+an entry
+add another entry with identical valid-time, element, and attributes
+values. The validity of time, element, and attribute triads
+is toggled along the transaction time line.
+.SH EXAMPLES
+Store a description for all files in the current directory.
+.IP
+.EX
+9ls |tdbadd -123 desription 'temporal database source code'
+.EE
+.PP
+.SH "SEE ALSO"
+.IR tdbjoin (1)

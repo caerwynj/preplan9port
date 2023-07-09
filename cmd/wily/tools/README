@@ -1,0 +1,54 @@
+c tools to interact with wily
+	
+win.c
+	Author: ??? Bill Trost ???
+	a terminal as a Wily window
+
+wattach.c wcat.c windows.c wread.c wreplace.c
+	Author: erik quanstrom <quanstro@Infomkt.ibm.com>
+
+	wattach
+		Attaches to a window & prints out an ascii version of the
+		events to
+		        stdout. as in
+		
+		wattach $query_win | awk '
+		        $1 == "exec" {
+		                s = $3 for (i = 4; i <= NF; i++){
+		                        s = s " " $i
+		                } system("rc -c ''do_query " s " ''")
+		        }
+		'
+	wcat
+		Print the contents of a Wily window to STDOUT.
+		Doesn't handle the last-char-in-msg-aint-ascii problem.
+	
+	windows
+		print out a readable list of windows. used mostly for
+			; cat name2id #!/bin/sh
+	        windows | awk '$1 == "'$1'" {print $2}'
+	
+	wread
+		read contents of a window.
+	
+	wreplace
+		replace the contents of window. unfortunately it still uses a hardcoded range of :,
+	
+	With just these programs i built a custom interface to our distributed,
+	hetrogenious database system. In 170 lines of shell script.
+
+	I will see if I can't work out a way to distribute a toy system.
+		
+
+Wins.c Wexec.c Wgoto.c
+	Author: ??? Bill Trost ???
+
+	Having to know window id's is pretty cumbersome, I know,
+	and I'm open to suggestions on how to improve things.
+	
+	Wins
+		print list of 'filename winid' lines to stdout
+	Wexec cmd id
+		Execute cmd (as if selected with b2), in context of id
+	Wgoto path id
+		Goto 'path' (as if selected with b3), in context of id

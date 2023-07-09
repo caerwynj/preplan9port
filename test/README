@@ -1,0 +1,248 @@
+This document describes the new basiclib test framework.
+
+Contents
+        Definitions
+        Overview
+        Database Access and Configuration
+        Tools
+        Examples
+
+DEFINITIONS
+
+Test Framework - The set of definitions and rules governing the
+organization and execution of testcases, and the tools, tstdrv and
+TestTool.pm, that run the testscripts.
+
+Testscript - a perl script with a .t suffix; contains the logic to
+setup and execute the testcase, and report the result.
+
+Testsuite - a directory with a .t suffix; contains testscripts and
+testsuites.
+
+Testcase - (conceptual) For a testcase to be part of the framework it
+must obey the following rules: (1) it is uniquely identifiable; (2) it
+is independent of any other testcase; (3) it has well defined pass or
+fail criteria; (4) it tests one thing.
+
+Test Harness - a data driven application, usually written in C, that
+assists in the testing of C library functions.
+
+OVERVIEW
+
+Testcases are organized into a testsuite hierarchy.
+
+The tstdrv application walks the testsuite hierarchy executing
+testscripts.
+
+A testscript executes one or more testcases, usually by feeding input
+into a test harness and comparing output with a file containing the
+expected output; however, the actual implementation of the testscript,
+test harness, and testcase is left up to the programmer.
+
+If a testcase was successful the testscript should print to stdout the
+message 'testname ....ok', otherwise, it should print 'testname
+....not ok'.
+
+The tstdrv application also executes two special files within each
+testsuite, 'begin' and 'end'.  The begin file should setup
+configuration or build executables for the testsuite directory.  The
+end file should clean up once the testsuite is complete.
+
+For example, if a testsuite contains a test harness which is
+implemented in C and needs to be compiled before it can be used by the
+testscripts, then the begin file will contain the perl code to build
+the harness.
+
+The return value of the begin script is checked; if the value is '0',
+then tstdrv will continue processing as normal, otherwise, it will
+cease working on the current testsuite and move back up to the parent
+directory.
+
+DATABASE ACCESS AND CONFIGURATION
+
+Each level (or testsuite) in the hierarchy assumes a configured state
+of the database.  The database must always be in a well defined state
+for each testcase.
+
+The root of the hierarchy assumes a new 'rundba' database.  Testcases
+can not assume anything else, such as existing accounts, unless they
+are in a subdirectory that explicitly sets up that environment for all
+testcases in that directory, or they are in a subdirectory that has
+inherited that environment from its parent.
+
+NOTE: On Sybase, no triggers can be active for the database
+environment hierarchy to work.  This is because there is no easy way
+to disable the triggers before rollback of data.  On oracle this does
+not apply.  Also, on both databases, the Catalog, Admin, and Customer
+databases should all be on one database.
+
+Inside a testsuite a new local database environment can be
+initialized, and all testcases (and nested testsuites) inside the
+directory can assume that environment--the environment has scope of
+that directory and all subdirectories.
+
+This environment might include a particular tax package, or tax
+configuration, or particular account setup.  But whatever the
+configuration it must appear the same for every testcase.  Therefore,
+testcases may be grouped around tax packages, or configurations of tax
+packages, or around bugs, or new features.  The hierarchy simplifies
+the creation, management, and analysis of testcases.  It makes
+explicit their relation to each other and the configuration associated
+with each testcase.
+
+Each testcase should follow a set of rules: (1) testcases should
+assume the database environment in the current directory; (2)
+testcases are self contained: a testcase should not depend on the
+outcome or database operations of another testcase; (3) testcases
+should rollback any modifications it makes to the database.
+
+The testsuite hierarchy will obey certain rules about the environment
+so the test framework can ensure the environment is well defined for
+each testcase.To implement the scope rules of the directory
+environment we need a program that will do something similar to
+database savepoints.
+
+Here is the process the test framework follows when executing
+testscripts inside a testsuite:
+
+        Entering a new directory a savepoint will identify all tables
+        we intend to modify for configuration and dump those tables
+
+        Configure the new environment
+
+        Loop through and run each testscript in the current directory;
+        the testscript will usually contain the following logic:
+
+                Savepoint tables modified by each testcase
+
+                Run testcase specific configuration
+
+                Run a testcase
+
+                Rollback to the savepoint in this testcase
+
+        End loop
+
+        End all tests; rollback to first savepoint, i.e., restore
+        original tables.
+
+Once a whole test framework has run, the database should be back in
+its original state: its rundba state.
+
+TOOLS
+
+tstdrv
+
+usage: tstdrrv user passwd testsuite.t
+
+tstdrv walks the directory hierarchy and executes perl scripts: begin,
+end, and *.t.
+
+TestTool.pm
+
+TestTool.pm is a perl module that implements the database access and
+configuration functionality:
+
+        savepoint spname tablelist ...
+
+        rollback spname
+
+        ini TABLE ini-file
+
+        del table
+
+        sql sql-string
+
+1.  savepoint - saves the data from all tables in the tablelist;
+spname identifies the savepoint for later rollback.  The data is saved
+in ini-file format (see below) in a file named TABLE.sp_name.  If the
+symbol 'all' is given for a table name, then all tables in the
+database are saved, in effect creating a snapshot of the database.
+
+2.  rollback - deletes all data from table and reloads the data from
+the ini-file formerly created by a savepoint with the given savepoint
+name.
+
+3.  ini - Loads the data from an ini-file into the database table.
+
+4.  del - deletes all data from the table.
+
+5.  sql - generic SQL is accepted.
+
+ini-file format - this is a CSV file with the first line being a list
+of column names.  String and Date literals are quoted using the
+database quoting rules.
+
+tstdrv uses the following environment variables: DBMS - determines
+whether it should connect to an 'oracle' or 'sybase' database; DSQUERY
+- identifies the Sybase server; DS_DATABASE - the sybase database;
+SYBASE - the sybase environment; ORACLE - the oracle environment;
+TWO_TASK - the oracle database.
+
+DBSHELL
+
+dbshell is a command interpreter that accepts a small set of built
+in commands:
+
+	@savepoint sp_name <TABLE ...|all>
+
+	@ini TABLE ini-file
+
+	@del TABLE
+
+	@rollback sp_name
+
+	@cd directory
+
+	! command
+
+	<inline sql>
+
+1. @savepoint - saves the data from all tables on the command line;
+sp_name identifies the savepoint for later rollback. The data is saved
+in ini-file format in a file named TABLE.sp_name. If the
+symbol 'all' is given for a table name, then all tables in the database
+are saved, in effect creating a snapshot of the database.
+
+2. @ini - Loads the data from an ini-file into the database table.
+
+3. @del - deletes all data from the table.
+
+4. @rollback - deletes all data from table and reloads the data from the
+ini-file formally created by a savepoint with the given savepoint name.
+
+5. @cd - change directory in the current environment.
+
+6. ! - executes the command via system();
+
+7. <inline sql> - SQL is accepted and must be terminated by a '/' on a 
+line by itself.
+
+The dbshell reads from standard intput.
+
+Usage: dbshell [options] name password
+	-h Write this help to STDOUT 
+	-t trace trace control string 
+	-b base	database to use 
+	-c cache SQL fetch cache size in rows
+
+dbshell uses the following environment variables: DBMS - determines
+whether it should connect to an 'oracle' or 'sybase' database; DSQUERY - 
+identifies the Sybase server; DS_DATABASE - the sybase database; SYBASE -
+the sybase environment; ORACLE - the oracle environment; TWO_TASK - the
+oracle database.
+
+EXAMPLES
+
+        tstdrv arbor arbor123 testsuite.t execute the whole testsuite
+
+        tstdrv arbor arbor123 testsuite.t/basic_acct.t/001.t execute
+just the testcase 001.t
+
+Other features of tstdrv: it opens a single connection to the database
+for better performance; it supports both sybase and oracle; the
+ini-file format is independent of database, but to support this the
+date format must be 'Mon DD YYYY HH:MIAM'.
+
+
+

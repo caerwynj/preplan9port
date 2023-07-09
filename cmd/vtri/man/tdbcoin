@@ -1,0 +1,60 @@
+.TH TDBCOIN 1
+.SH NAME
+tdbcoin - coincident join, temporal database operator
+.SH SYNOPSIS
+.B tdbcoin
+[
+.I -123d
+]
+.I file
+.SH DESCRIPTION
+.I Tdbcoin
+reads triads from standard input of the same format as
+.IR tdbjoin (1),
+and performs a coincident join between the input triad 
+and the temporal relation 
+stored in
+.I file 
+created by
+.IR tdbadd (1).
+.PP
+A coincident join finds the nearest neighbor,
+either before or after, of the triad along the valid time line.
+.PP
+The following options are recognized.
+.TP
+.BI - n
+where 
+.I n
+is inversion 1, 2, or 3 of the triad
+to use to find the coincident entry. 
+1st inversion, the default, uses only the
+effective valid time of the triad to locate
+an entry in the file. 
+2nd inversion restricts the valid time line to
+entries matching the element of the triad,
+and then uses the effective valid time to locate the
+nearest neighbor.
+3rd inversion is the same as 2nd but
+uses the attribute of the triad to restrict
+the valid time line.
+.TP
+.B -d
+Print the entry following the triad along the valid
+time line. The default is to print the preceding entry.
+.SH EXAMPLES
+If 
+.I task
+is a temporal relation containing a log of personal activity,
+the following prints what tasks you were working 
+on when files in 
+.L /bin
+were last modified.
+.IP
+.EX
+9ls /bin |tdbcoin task
+.EE
+.SH "SEE ALSO"
+.IR tdbadd (1),
+.IR tdbjoin (1),
+.IR 9ls (1)

@@ -1,0 +1,41 @@
+#
+#	Prototype Solaris Makefile for libtext
+#
+#	Define operating system type: -DSOLARIS
+#	
+#	Additionally, -D_POSIX_SOURCE (or its equivalent) may be specified
+#	if your compiler supports posix-compatible compilation
+OS=-DSOLARIS -D_POSIX_SOURCE
+
+#	add -Iincludedir for any include directories that need to be searched
+#	for posix header files
+INCS=-I. -I../sam/include
+
+#	add name of library orderer - use ":" if none exists
+RANLIB=:
+
+#	add name of library
+AR=ar
+
+CFLAGS=-c $(OS) $(INCS) -D_LIBXG_EXTENSION
+
+LIB=libtext.a
+CC=cc
+
+OBJ=click.o scroll.o text.o
+
+all:	$(LIB)
+
+$(LIB):	$(OBJ)
+	$(AR) rv $(LIB) $(OBJ)
+	$(RANLIB) $(LIB)
+
+clean:
+	rm -f *.o
+
+nuke:	clean
+	rm -f $(LIB)
+
+install:	$(LIB)
+
+$(OBJ):	../sam/include/u.h ../sam/include/libc.h ../sam/include/libg.h ../sam/include/frame.h text.h

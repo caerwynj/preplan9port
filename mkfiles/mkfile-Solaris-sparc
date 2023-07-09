@@ -1,0 +1,27 @@
+TARGMODEL=Posix
+TARGSHTYPE=sh
+CPUS=sparc
+
+O=o
+OS=o
+
+AR=ar
+ARFLAGS=cvru
+
+YACC=yacc
+YFLAGS=-d
+
+AS=cc
+ASFLAGS=-c
+
+CC=	cc
+CFLAGS=	-c\
+	-DSOLARIS\
+	-D_POSIX_SOURCE\
+	-I$ROOT/src/include\
+
+LD=	cc
+LDFLAGS= -L$ROOT/$OBJDIR/lib
+
+SYSLIBS=
+EMULIBS=	-lsunmath -lsocket -lm -lX11 -lXext -lnsl -lposix4

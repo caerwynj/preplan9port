@@ -1,0 +1,146 @@
+This file contains any messages produced by compilers while
+running configure, to aid debugging if configure makes a mistake.
+
+configure:586: checking for a BSD compatible install
+configure:639: checking whether build environment is sane
+configure:696: checking whether make sets ${MAKE}
+configure:743: checking for working aclocal
+configure:756: checking for working autoconf
+configure:769: checking for working automake
+configure:782: checking for working autoheader
+configure:795: checking for working makeinfo
+configure:816: checking for gcc
+configure:846: checking for cc
+configure:929: checking whether the C compiler (cc  ) works
+configure:945: cc -o conftest    conftest.c  1>&5
+configure:971: checking whether the C compiler (cc  ) is a cross-compiler
+configure:976: checking whether we are using GNU C
+configure:985: cc -E conftest.c
+configure:1004: checking whether cc accepts -g
+configure:1039: checking for cc option to accept ANSI C
+configure:1092: cc  -c -g  conftest.c 1>&5
+"configure", line 1089: warning: statement not reached
+configure:1121: checking how to run the C preprocessor
+configure:1142: cc -E  conftest.c >/dev/null 2>conftest.out
+configure:1205: checking for ln
+configure:1239: checking for sys/resource.h
+configure:1249: cc -E  conftest.c >/dev/null 2>conftest.out
+configure:1239: checking for sys/time.h
+configure:1249: cc -E  conftest.c >/dev/null 2>conftest.out
+configure:1239: checking for sys/types.h
+configure:1249: cc -E  conftest.c >/dev/null 2>conftest.out
+configure:1239: checking for unistd.h
+configure:1249: cc -E  conftest.c >/dev/null 2>conftest.out
+configure:1280: checking for dirent.h that defines DIR
+configure:1293: cc -c -g  conftest.c 1>&5
+configure:1318: checking for opendir in -ldir
+configure:1337: cc -o conftest -g   conftest.c  -ldir  1>&5
+ld: fatal: library -ldir: not found
+ld: fatal: File processing errors. No output written to conftest
+configure: failed program was:
+#line 1326 "configure"
+#include "confdefs.h"
+/* Override any gcc2 internal prototype to avoid an error.  */
+/* We use char because int might match the return type of a gcc2
+    builtin and then its argument prototype would still apply.  */
+char opendir();
+
+int main() {
+opendir()
+; return 0; }
+configure:1401: checking for ANSI C header files
+configure:1414: cc -E  conftest.c >/dev/null 2>conftest.out
+configure:1481: cc -o conftest -g   conftest.c  1>&5
+configure:1505: checking for sys/wait.h that is POSIX.1 compatible
+configure:1526: cc -c -g  conftest.c 1>&5
+configure:1548: checking for uid_t in sys/types.h
+configure:1582: checking type of array argument to getgroups
+configure:1615: cc -o conftest -g   conftest.c  1>&5
+configure:1653: checking for pid_t
+configure:1686: checking for size_t
+configure:1719: checking for uid_t in sys/types.h
+configure:1753: checking for ssize_t
+configure:1789: checking for getgroups
+configure:1818: cc -o conftest -g   conftest.c  1>&5
+configure:1789: checking for setpgrp
+configure:1818: cc -o conftest -g   conftest.c  1>&5
+configure:1789: checking for setrlimit
+configure:1818: cc -o conftest -g   conftest.c  1>&5
+configure:1844: checking for POSIX getgroups
+configure:1862: cc -o conftest -g   conftest.c  1>&5
+configure:1887: checking for sigsetjmp
+configure:1904: cc -o conftest -g   conftest.c  1>&5
+configure:1926: checking whether setpgrp takes no argument
+configure:1954: cc -o conftest -g   conftest.c  1>&5
+"configure", line 1946: prototype mismatch: 2 args passed, 0 expected
+cc: acomp failed for conftest.c
+configure: failed program was:
+#line 1934 "configure"
+#include "confdefs.h"
+
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+
+/*
+ * If this system has a BSD-style setpgrp, which takes arguments, exit
+ * successfully.
+ */
+main()
+{
+    if (setpgrp(1,1) == -1)
+	exit(0);
+    else
+	exit(1);
+}
+
+configure:1980: checking if _KERNEL is required for RLIMIT defines
+configure:1998: cc -c -g  conftest.c 1>&5
+configure:2046: checking for rlim_t
+configure:2176: checking for sig_atomic_t
+configure:2208: checking for sigaction and SA_INTERRUPT
+configure:2226: cc -c -g  conftest.c 1>&5
+"configure", line 2220: undefined symbol: SA_INTERRUPT
+cc: acomp failed for conftest.c
+configure: failed program was:
+#line 2213 "configure"
+#include "confdefs.h"
+
+#include <signal.h>
+		
+int main() {
+
+struct sigaction foo;
+foo.sa_flags = SA_INTERRUPT;
+sigaction(SIGINT, 0, 0);
+		
+; return 0; }
+configure:2248: checking for restartable system calls
+configure:2274: cc -o conftest -g   conftest.c  1>&5
+"configure", line 2266: warning: argument #2 is incompatible with prototype:
+	prototype: pointer to function(int) returning void : "/usr/include/iso/signal_iso.h", line 48
+	argument : pointer to function(int) returning int
+configure: failed program was:
+#line 2256 "configure"
+#include "confdefs.h"
+/* Exit 0 (true) if wait returns something other than -1,
+   i.e. the pid of the child, which means that wait was restarted
+   after getting the signal.  */
+#include <sys/types.h>
+#include <signal.h>
+ucatch (isig) { }
+main () {
+  int i = fork (), status;
+  if (i == 0) { sleep (3); kill (getppid (), SIGINT); sleep (3); exit (0); }
+  signal (SIGINT, ucatch);
+  status = wait(&i);
+  if (status == -1) wait(&i);
+  exit (status == -1);
+}
+
+configure:2309: checking for SysV SIGCLD semantics
+configure:2341: cc -o conftest -g   conftest.c  1>&5
+configure:2367: checking whether #! works in shell scripts
+configure:2406: checking for /dev/fd
+configure:2542: checking for va_copy()
+configure:2669: checking extant directories for default path

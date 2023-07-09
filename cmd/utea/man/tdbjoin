@@ -1,0 +1,99 @@
+.TH NI 1
+.SH NAME
+tdbjoin - temporal database operator
+.SH SYNOPSIS
+.B tdbjoin
+[
+.I -123jmoprstv
+]
+.I file
+.SH DESCRIPTION
+.I Tdbjoin
+reads from standard input lines specifying a set of temporal
+triads,
+and joins each triad with the temporal relation 
+stored in
+.I file 
+created by
+.IR tdbadd (1).
+.PP
+The fields of the input triad are
+.BR time , 
+.BR element , 
+and
+.B attribute
+separated by tabs.
+Any other data on the input line are passed through.
+.PP
+The temporal relation also is a set of triads.
+The time of the input triad is the effective time. 
+The time of the
+temporal relation is the valid time, that is, 
+the start time when
+the element attribute pair become valid.
+The standard join condition is true when both element fields match
+and the valid time is less than the effective time and effective
+time is less than the next greater valid time for the element, 
+or if no greater valid time
+for the element exists.
+The join condition can be altered by one of the command line flags. 
+.PP
+The default output 
+is a  triad with time being the effective time
+taken from the input and element and attribute
+values taken from the 
+.IR file .
+.PP
+The following options are recognized.
+.TP
+.BI - n
+where 
+.I n
+is the inversion 1, 2, or 3 on which to join. 
+1st inversion implies the element
+is a time in seconds and the 
+.I file 
+is searched on the time field. 
+2nd inversion, the default, searches the
+.I file
+on the element field. 
+3rd inversion searches 
+.I file
+on the attribute field.
+.TP
+.B -m
+The relation is one-to-many so the valid time is ignored in the
+relation and all matching records are printed.
+.TP
+.B -o
+Outer join. The source (standard input) line is printed even if no matching
+target line is found.
+.TP
+.B -p
+Treat the element as a prefix to be searched on, instead of the default
+which is an exact match of the key.
+.TP
+.B -r
+Interpret the input element and attribute as a range and print
+all triads from 
+.I file
+that fall within that range.
+.TP
+.B -v
+Print the valid time instead of the effective time.
+.TP
+.B -t
+Toggle the validity of the element/attribute pair on every successive entry along
+the valid time line. This is also a one-to-many join
+where effective time specifies the cut-off date for the join; 
+no tuples specified in the future are considered.
+.SH EXAMPLES
+.PP
+List the currently effective description for all files in the current
+directory.
+.TP
+.IP 
+9ls |tdbjoin description
+.SH "SEE ALSO"
+.IR tdbadd (1)
+.IR 9ls (1)

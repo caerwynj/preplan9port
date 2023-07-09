@@ -1,0 +1,8 @@
+TODO
+
+Merge libXg and libframe
+build all tools
+fix win so multiple win's can be open
+Allow win tO change cwd when cd (add command to rpc)
+Replace socket implementation of libmsg with pipes. (mkfifo)
+

@@ -1,0 +1,3 @@
+cc win.c -I $h/src/include -I $h/src/cmd/wily/include -L $h/src/cmd/wily/libmsg -L $h/src/lib -lmsg -lsocket -lnsl -l9
+lcc win.c -DSOLARIS -D_POSIX_SOURCE -DHAVE_SYS_SELECT_H -I$h/src/include -I../libmsg  -L$h/src/lib ../libmsg/libmsg.a -lstdio -lsocket -lnsl -l9
+rm win.o win

@@ -1,0 +1,34 @@
+<HEAD>
+<TITLE>Plan 9 man page</TITLE>
+<META content="text/html; charset=utf-8" http-equiv=Content-Type>
+</HEAD>
+<BODY BGCOLOR=WHITE>
+   <br>
+<H4>NAME     <br></H4>
+<DL><DT><DD>tdbjoin - temporal database operator<br>
+</DL><H4>SYNOPSIS     <br></H4>
+<DL><DT><DD><TT>tdbjoin </TT>[ <EM>-123jmoprstv </EM>] <EM>file<br>
+</EM></DL><H4>DESCRIPTION     <br></H4>
+<DL><DT><DD><EM>Tdbjoin </EM>reads from standard input lines specifying a set of temporal triads, and joins each triad with the temporal relation stored in <EM>file </EM>created by <A HREF="tdbadd.html"><EM>tdbadd</EM>(1).</A>  <P>
+The fields of the input triad are <TT>time</TT>, <TT>element</TT>, and <TT>attribute </TT>separated by tabs. Any other fields on the input line are passed through.  <P>
+The temporal relation also is a set of triads. The time of the input triad is the effective time. The time of the temporal relation is the valid time, that is, the start time when the element attribute pair become valid. The standard join condition is true when both element fields match and the valid time is less than the
+effective time and effective time is less than the next greater valid time for the element or if no greater valid time for the element exists. The join condition can be altered by one of the command line flags.  <P>
+The default output is a triad with time being the effective time taken from the input and element and attribute values taken from the <EM>file</EM>.  <P>
+The following options are recognized.<br>
+<TT>-</TT><EM>n&nbsp;&nbsp;&nbsp;&nbsp;</EM>where <EM>n </EM>is the inversion 1, 2, or 3 on which to join. 1st inversion implies the element is a time in seconds and the <EM>file </EM>is searched on the time field. 2nd inversion, the default, searches the <EM>file </EM>on the element field. 3rd inversion searches <EM>file </EM>on the attribute field.<br>
+<TT>-j&nbsp;&nbsp;&nbsp;&nbsp;</TT>Join the triad and entry. Instead of the default behaviour of substituting the target attribute for field 3 in the pipeline, tdbjoin pushes fields 3 and greater to the right, and places the target attribute in field 3.<br>
+<TT>-m&nbsp;&nbsp;&nbsp;&nbsp;</TT>The relation is one-to-many so the valid time is ignored in the relation and all matching records are printed.<br>
+<TT>-o&nbsp;&nbsp;&nbsp;&nbsp;</TT>Outer join. The source (standard input) line is printed even if no matching target line is found.<br>
+<TT>-p&nbsp;&nbsp;&nbsp;&nbsp;</TT>Treat the element as a prefix to be searched on, instead of the default which is an exact match of the key.<br>
+<TT>-r&nbsp;&nbsp;&nbsp;&nbsp;</TT>Interpret the input element and attribute as a range and print all triads from <EM>file </EM>that fall within that range.<br>
+<TT>-s&nbsp;&nbsp;&nbsp;&nbsp;</TT>Substitute the target attribute for field 2 (element) in the output.<br>
+<TT>-v&nbsp;&nbsp;&nbsp;&nbsp;</TT>Print the valid time instead of the effective time.<br>
+<TT>-t&nbsp;&nbsp;&nbsp;&nbsp;</TT>Toggle the validity of the element/attribute pair on every successive entry along the valid time line. This is also a one-to-many join where effective time specifies the cut-off date for the join; no tuples specified in the future are considered.<br>
+</DL><H4>EXAMPLES     <br></H4>
+<DL><DT><DD>List the currently effective description for all files in the current directory.<br>
+</DL><DL><DT><DD><DL><DT><DD><TT><DL><DT><DD>9ls |tdbjoin description<br>
+</TT></DL></DL></DL><H4>SEE ALSO     <br></H4>
+<A HREF="tdbadd.html"><DL><DT><DD><EM>tdbadd</EM>(1)</A> <A HREF="9ls.html"><EM>9ls</EM>(1)<br></A>
+</DL>
+
+</BODY></HTML>

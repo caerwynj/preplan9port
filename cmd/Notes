@@ -1,0 +1,1036 @@
+
+Issues
+1. pair[2] are of type long to represent -1.
+but this restricts the length of long which
+represent time.
+
+2. Use emalloc etc for getting memory. 
+we currently aren't testing all returns from malloc.
+
+
+TODO
+1. Still need ETT		Done.
+
+2. tock could take a blank line as a break in aggregate,
+and to print results before continuing on.				Done
+
+3. We need a C library for querying the database.
+	search()
+	insert()
+	ni()			Done
+
+5. We need -b flag so data is passed as a binary stream in
+packed entry format through the pipeline.
+
+
+This means we can run tri on a series of ranges
+and do it in one pipeline.
+ni will pass the blank lines through.
+This means we could be nrange code inside tri
+it could pass arg if inversion is 1.
+
+4. We need a broader language for specifying date ranges.
+Look at crontab. Must be able to specify day of week, or
+month or year etc. and add or subtract value from this.
+For example, how do we specify the last monday?
+/mon/,/tue/
+Use regexp syntax:
+?mon?,/mon/    #last monday thru next monday
+regexp match the strings 'Mon Dec  9 2002'
+For each day
+/Mon Dec 9 2002/, /Tue Dec/   #Monday to the next tuesday in december
+?Sep?
+/Dec 1/;/Fri/		# the first work week of December
+
+Queries.
+1. aC
+2. aRy
+3. a?    find all categories to which a belongs
+4. ?C   find all abstract objects belonging to category
+5. aR?
+6. ?Ra
+7. a? + a?? + ??a
+9. ?Rv
+10. ?R[v1,v2]
+
+
+We must them cast this to it's inversion based on what
+we are searching for.
+
+We can then map id's back to the concrete values.
+
+Date range grammar.
+
+%token	LSLASH LQUES LCOMMA LCOLON LPLUS LMINUS
+%token	LSTRNG LDAY LMON LDT LYR
+
+caddr:	gaddr
+|	caddr ',' gaddr
+|	caddr ';' gaddr
+
+gaddr:	saddr
+|	saddr uexpr
+|	daddr
+|	daddr uexpr
+
+saddr:	NUM
+
+daddr:	'/' dlst '/'
+|	'?' dlst '?'
+
+dlst:	dstr
+|	dlst dstr
+
+dstr:	LDAY
+|	LMON
+|	LDT
+|	LYR
+
+
+uexpr:	'+'  znum
+|	'-'  znum
+
+znum:
+|	NUM
+
+
+
+Variable length entries
+A Block is laid out as follows;
+size[4] id[4]
+size[2] zip[1] tt[4] vt[4] key[s] val[s]
+...
+
+where n[2] followed by n bytes of data a variable length fields and param[s]
+is shorthand for n[2] param[n].
+
+top:		saddr
+	|	caddr
+
+caddr: 	saddr ',' saddr
+	|	saddr ';' saddr
+
+saddr:	znum
+	|	'^'
+	|	'$'
+	|	znum '+' znum
+	|	znum '-' znum	
+
+znum:
+	|	NUM
+
+
+trifs
+/n/tri
+	relations
+	...
+	ctl
+
+Each relation is a triad. Reading
+produces the current query of the
+file default tdblook -1 ,
+Writing to the ctl file alters the current
+query.
+echo tick 1,2 > ctl
+then a cat of /n/tri/tick will report
+the query. The state will remain
+until changed directly by writing again
+to ctl.
+Writing to a relation will append. But will
+only appear when read back if it appears
+within the current query.
+Triads must be written to a file, and the
+transaction time is tacked on.
+
+New files can be created that are joins
+of existing files.
+echo new r1 join tick pcs > ctl
+The join can be further altered as
+if a normal file by writing to ctl, but
+the join is not updated when the
+joined tables a modified. A refresh
+operation is required.
+triadfs
+
+/appl/cmd/
+
+commands like rm cat tail etc. will work
+new relations can be creates e.g.
+cat /n/tri/tick |secs > /n/tri/sec
+
+
+We could serve a tree of xml files. One file per 'task' which
+is the root of a tree within the trinity relational hierarchy.
+We then use difft to compare hierarchical sequences as they
+are written back to the file, and so merge changes bach to the database.
+
+So we want a script to convert hseq of a tree into xml.
+And one to parse xml back to a hseq.
+
+difft can report differences of two hseq, and
+we can use this to generate data to append to relations.
+
+Level, Name, tag, vt, value
+0, Task, task, 10202010, /in/ce/0001
+1, desc, desc, 10101020, the description
+
+
+The algorithm for search
+For each entry
+if key is a prefix or preceeds or is same as entry and (no range or (entry is a prefix or preceeds or is same as range)
+	search block.
+
+We want to enter the block where the next block is greater than our key.
+
+We want to skip over blocks where entry preceedes or is prefix of key
+and then continue until nested search returns 0.
+
+
+We need to rewrite the pack and unpack routines, and split etc.
+so we only use one occurrence of a key in a block. Following entries
+if they have the same key use the previous key by default. That is,
+the last valid key (lvk). When we build the block in memory all
+key's point to the lvk. This is implied if the length of the key is 0,
+since this is not allowed except to indicate that the lvk applies.
+This should compress blocks significantly.
+
+This might all be centralized inside addentry. Addentry
+can look at the entries following and preceding. It just
+needs to set the size of the before and after entries depending
+on whether they match. The key is always set in any case,
+Except convE2M and convM2E to need track the lvk and
+set the current key if the strlen is 0 for the key.
+
+convE2M -- checks a flag in entry that for compressed key. If key is compressed it
+sets it to null and then carries on as normal.
+
+convM2E  -- don't need to change this; addentry can fix the key when we attempt to insert
+an entry with a null key.
+
+addentry -- needs to compare keys and change the entry size and block size accordingly.
+Might need to set a flag for compressed keys.
+	Find postition as normal.
+	if key is first in array
+		if key is null
+			error
+		else if following key is the same 
+			set following key to compressed
+			alter entry sizes
+	else
+		if key is null
+			set key pointer
+			set current key compressed
+		else if previous key is same
+			set current key compressed
+		else
+			set current key not compressed
+
+
+new -- will need to initialize compressed flag to zero.
+
+Arrgh, but third inversion does have null keys.
+At best we are only compressing the 2nd inversion.
+But the same rule could apply for third inversion, except
+we need a symbol for null. else we need to store the compressed
+flag.
+
+Whatever inversion we should try to compress both key and value,
+so there is minimal affect when we 'delete' rows.
+
+Our zip flag then specifies: 0 = no compression, 1 = key compressed, 2 = val compress, 3 = both compressed, 
+4 = do compression.
+
+We need a flag to addentry to say whether we are unpacking a block, in which case it does not
+string comparison, or we are inserting new entries, then we must compare strings for both key and value.
+
+When we insert an entry we must make sure we do not invalidate the compression of the
+following entries. We must check both key and val.
+
+ZNONE	0
+ZKEY		1
+ZVAL	2
+ZBOTH	3
+ZDO		4
+
+if (zip == ZDO)
+	if (first in block)
+		zip = ZNONE
+		compress following (recursive)
+	if (key same as previous)
+		zip |= ZKEY
+	else if (following zip is ZKEY)
+		uncompress following key
+			set following zip key ^= ZKEY
+	if (val same as previous)
+		zip |= ZVAL
+	else if (following zip is ZVAL)
+		uncompress following val
+else	if (first in block)
+		zip = ZNONE
+		esize += len key len val
+else
+	if (zip & ZKEY)
+		set key pointer to previous key
+	if (zip & ZVAL)
+		set val pointer to previous val
+
+
+New function zipe(block, entry, location)
+
+a	0	1
+a		2			<--- insert (compress current, leave following)
+a	1	3
+
+a	0	1
+b		2			<--- insert  (leave current, uncompress following)
+a	1	3
+
+c	0	1
+d		2			<--- insert (leave current, compress following)
+d	0	3
+
+e	0	1
+f		2			<--- insert (leave current, leave following)
+g	0	3
+
+
+Insert of addentry ni() could call insert, so each call to ni() returns a new btree,
+ready to be written to a file or stdout in binary format.
+
+A range query that is not in the first line sets the effective date, like eff
+
+9ls /project |tea 'range tick:_' |secs |tock -r |s2d |tea 'touch:7'
+
+eff 7 |tdbjoin touch
+
+The this should work
+9ls /bin/ls |tea 'desc:'
+
+Assuming 9ls returns the modification time, and /bin/ls was modified
+in the past and a desc has since been added, then desc: should
+set the effective date to the current date.
+The problem is, how does it decide whether there is input on stdin
+and should do eff instead of range.
+
+Does ':' imply a multi join. eff doesn't imply that.
+
+9ls /bin/ls |tea 'desc:' 
+should return all descriptions of /bin/ls in desc within the range :today.
+tea 'desc: ~ /bin/ls'
+9ls /bin/ls |tea desc+
+
+9ls /bin/ls |tea 'desc+%  ~ :1,4 {$1 = :1}'
+
+9ls /project |tea 'range @{{evt = $3} tick:_ {sec() sum() s2d() eff(evt)} touch}'
+Nesting of pipelines.
+Code within the pipeline.
+Function calls.
+
+The model for the language is awk. Instead of pattern {action} we have attribute[flags] {action}
+There is a default action for each attribute which is to substitute attribute values.
+
+attribute [flags] {action}
+
+action: sum s2d eff(rng)
+
+tea 'bill: ' |sec |eff |tea 'split:/a{$1/a} tes^ {tock} {s2d}'
+
+
+Add a mode to Btree to BTREAD or BTWRITE.
+In getblock, when we want to flush the btree
+we can either write the Btree and then free the
+block list, or just free the block list.
+A btree should not be opened for both reading and writing.
+Two separate trees should be opened.
+
+The way to do file locking is to have a server process that
+keeps part of the btree in memory and spawns processes
+to process requests and locks blocks as needed. Nah!
+
+a. Need a VERSION string for the Btree file format.
+b. Make HEADR 512
+c. add timestamp to blocks so search can tell whether btree modified under foot.
+	or sequence number stored in header with every block <= seq number. Header
+	is last block to be written after modification (instead of first).
+
+For toggle to work in tdblook we'd need to build a symbol table
+for a combined element-attribute. It's not neccessary in tdbjoin
+because we assume the element is always the same.
+If we did make the symtab combined then tdbjoin could almost
+fully replace tdblook.  Or rather tdblook would call ni().
+
+The symtab would store a pointer to the element and attribute.
+We can then query on any inversion and do a toggle.
+We can shortcut the strcmp by comparing pointers for element and attribute
+because of zip they should usually point to the same thing if the strings are the same.
+
+For ni, if the attribute is set we should also compare with that.
+So it provides an existence check: is key/value valid at time t.
+
+tea 'index:/adept/ , desc*'
+
+Braces mark off a nested query
+
+tea 'tick: `{tick:, secs tock}'
+
+9ls /bin | tea 'tick[1] project[3]'
+
+[1], [2], and [3] are inversions.
+[1] is coincidence join.
+
+Given a triad:
+time	element	attribute
+
+And given flags: toggle, inversions 1 2 and 3, range, exact, coincidence, multiple, effective-time, invert.
+We can do the following searches:
+
+1. Match element AND attribute at effective valid time
+2. Range on valid time between time and attribute
+3. Range on element between element and attribute
+4. Prefix on element
+5. Prefix on attribute
+6. Exact match on element
+7. Exact match on attribute
+
+All the options we can give to search
+1. vt1, vt1, 1		exact on time
+2. vt1, vt2, 1		range on time
+3. s, s, 2			exact on elem
+4. s, s, 3			exact on attr
+5. s, t, 2			range on elem
+6. s, t, 3			range on attr
+
+Then each of these can be combined with flags toggle, many, and effective, and another string.
+many, toggle, and effective are mutually exclusive.
+a. many
+b. many and string
+c. toggle
+d. toggle and string
+e. effective
+f. effective and string
+
+1. vt1, vt1, 1		exact on time
+	a. many		return all entries matching exact time
+	b. many and str	return all entries matching exact time and where key = string
+2. vt1, vt2, 1		range on time
+	a. many		return all entries within range
+3. s, s, 2			exact on elem
+	a. many			all entries on exact string
+	b. many and str	all entries on exact string and val = str
+	c. toggle			multiple entries but toggle timeline
+	d. toggle and str	multiple entries but toggle timeline and where val = str
+	e. effective		currently effective triad where key = s
+	d. effective string	currently effective triad where key = s and val = str
+4. s, s, 3			exact on attr
+	a. many			all entries where val = s
+	b. many and str	all entries where val = s and key = str
+	c. toggle			multiple entries where val = s and toggle timeline
+	d. toggle and str	multiple entires where val = s and key = str and toggle timeline
+	e. effective		currently effective triad where val = s
+	f. effective and str	currently effective triad where val = s and key = str
+5. s, t, 2			range on elem
+	a. many			all entries where key between range s,t
+	b. many and str	all entries where key in range s,t and val = str
+	c. toggle			multiple entries where key in range s,t and toggle timeline
+	...
+6. s, t, 3			range on attr
+	...
+
+Here's the problem. Not all the above queries make sense. Especially when
+we try to get the currently effective triad. We have to define semantics for these
+queries. Effective would mean the currently effective value for each distinct key.
+We would need to sort keys by key and valid time, then choose the currently
+effective value. 
+
+Try to focus on creating just the primitives. Don't create a complicated
+tdbjoin that can be done by combinations of simpler functions.
+Bear in mind we can create temporary btrees. 
+
+Changes to interface of tdbjoin:
+vt, s, t, inversion, str, flags
+Input is a triad, time, element, attribute, and a bunch of flags, 
+inversion, exact, toggle, many, range, effective, match-prefix, match-exact.
+many, toggle, and effective are mutually exclusive.
+inversion is always present and is one of 1, 2, or 3.
+
+	JTOGGLE
+	JMANY
+	JSINGLE
+
+	JRANGE
+	JEXACT
+	JPREFIX
+
+	JFIRST
+	JSECOND
+	JTHIRD
+
+	JVALANY
+	JVALPRE
+	JVALEXACT
+
+time, element, attribute  & optional str
+
+JMULTI & JRANGE & JFIRST & JVALANY
+	search(time,attribute, 1)
+
+JMULTI & JRANGE & JSECOND & JVALANY
+
+JRANGE & JFIRST = time, attribute
+JRANGE & JSECOND = element, attribute
+JRANGE & JTHIRD = attribute, element		(range should be specified externally, not by triad)
+Or else range can be encoded in the attribute value (0,1 a,b) Then range queries can from
+tea appear to be relations that substitue the attribute with the range. This then implies
+that an object is *always* selected first by 9ls.
+9ls  /dummy  |tea ':4,3 tick'
+1234234 /dummy 1231234,12343432
+We shouldn't create compound fields like this though. It destroys the relational model.
+
+
+JPREFIX & JFIRST = time, time
+JPREFIX & JSECOND = element, 0
+JPREFIX & JTHIRD = attribute, 0
+
+JEXACT & JFIRST = time, time
+JEXACT & JSECOND = element, element
+JEXACT & JTHIRD = attribute, attribute
+
+JVALANY & JFIRST = nil
+JVAlYPRE & JFIRST = element
+JVALEXACT & JFIRST = element
+
+JVALPRE | JVALEXACT & JSECOND = attribute
+JVALPRE | JVALEXACT & JTHIRD = element
+
+JVALALL & (JFIRST | JSECOND | JTHIRD) = time, element, attribute
+
+tdbjoin(Btree *b, Entry *s, int flags, Block *r)
+
+I think my less() function is wrong.
+(s->vt > t->vt) should be (s->vt >= t->vt).
+
+Less should just return 1 or 0.
+
+This is significant for coin, so we never get the first entry in a block,
+which would happen with the current less function.
+
+We're assuming a lockfs like Inferno's could be implemented
+allowing multiple reader single writer access.
+There is a risk of deadlock if we are reading and writing
+to the same file in a pipeline.
+The way to really make this work is for each read to have
+a fixed copy of the file, an old version, and as soon as
+it finishes the file is removed and the latest copy of the
+file replaces it. That would be new blocks are cached
+and swapped as as soon as there are no more readers.
+Or tdbadd could obtain a reader and a writer lock which is
+a spawned process which blocks until we free our reader lock
+which we do only once we've read all the data hand have all
+the blocks in memory ready to commit. We then free the reader
+lock and the writer will then commit all blocks we have in
+memory. YES! There is a race condition. Between the time
+we get the reader lock and the writer lock, another process
+may obtain a writer lock on the file. We need an atomic
+operation to get a reader and writer lock.
+
+
+btree() needs to allow flags for readonly mode, and all commands
+except tdbadd should use OREAD mode.
+
+
+tea '/bin desc {index=="string"}+ {tick:, |secs |tock}* est* comment*'
+
+=>
+9ls /bin |tdbjoin desc |tdbjoin  `{tdblook -3 index string |tdbadd -2 tmp.1; echo tmp.1} | tdbjoin -mo <{range , |tick |secs |tock} | tdbjoin -mo est 
+
+Newline terminates a command.
+
+I should leave it up to the shell to do fancy stuff like this. Isn't that the whole point
+of integration with the shell.
+I keep loosing focus on our design principles.
+Don't do anything the shell can do just as well.
+Focus just on the join and the join semantics.
+
+Here's a new rule. The element and attribute fields are interchangeable.
+We can do a join on a btree where we treat the attribute field as the element
+field.
+And remember that we can invert at any point.
+Invert is a single backquote mark.
+
+9ls /sys/src/cmd/*.c |tea 'src`'
+
+To find if an index term is currently effective:
+
+Query the third inversion then join the second inversion of the same relation and toggle, with matching val.
+
+tdblook -3 index string |tdbjoin -tpr index 
+
+This means we are querying everything twice.
+
+The alternate way is
+echotriad 0 string |tdbjoin -3t index
+
+This treats the attribute of index as the element. We join with the incoming element
+which is our query string, and set the toggle flag. This works because the element
+which is now the attribute is the filename and is the thing being toggled. We are
+doing an exact match on the string term here though. If we want to do the prefix
+query then we still need to modify toggle to use both element and attribute to toggle
+on.
+
+JEFFECTIVE can not be used unless with JEXACT. But it can then be used
+on either inversion 2,3.
+
+We can do effective because they are in sorted order in the Block. We
+just need to watch when the element changes value.
+
+The other option for range queries is to use pairs of input triads
+that have the same element.
+0	/project/a	1
+1	/project/a	10
+
+Then find everything in range between 1 and 10
+or the min and max of all input triads.
+
+For joins, instead of appending to the triad we could add to the output another triad
+
+9ls /bin/ls |tea ',desc'
+1234	/bin/ls	1223
+1234	/bin/ls	desciption of ls
+
+Maybe this should be an option using ';' instead of ','
+
+
+9ls /project |tea 'begin ; end tick:_'
+
+
+Okay! Testing VALs is not part of tdbjoin's job. It can be done
+by grep or awk.
+
+This means ranges can always be encoded as
+either (time, attribute) or (element, attribute)
+
+(if you need to join on key first and then limit by
+range you would do the limit using awk. But
+if you wanted to query on a range with any key
+we could do that.
+
+The range and key check can also be done by creating
+a nested query
+9ls /bin | tea '{index==blah}'
+
+Nested queries could of course be generated separately.
+
+tea 'index==blah t1=_'
+9ls /bin |tea t1
+
+tea ' `index ``index'
+
+Backquote is invert index for join.
+
+`_ is invert standard input
+
+' fver `_ `version'
+A single backquote is 1st inverion and double backqoute is third inversion
+
+`range* ``fver: desc*
+
+We need flags for prefix, range, zero or more, one or more, zero or one, exact, valid time
+
+	(blank) exact match at effective time
++	one or more			-m
+*	zero or more			-mo
+?	zero or one			-o
+`	1st inversion			-1
+``	3rd inversion			-3
+^	toggle				-to
+,	join					-j
+~	prefix				-p
+:	range				-r
+%	valid time				-v
+.	substitute				-s
+@	coincidence			tdbcoin
+=	assign				tdbadd
+<<	invert				swap element attribute, left rotate
+>> 	right rotate
+/a/b	absolute path
+
+triad 0 blah|eff |tea '~ ``index^ :=2,4'
+
+blah ~ index'^
+
+:1,4 :: index[3] desc+
+
+:1,4 :: tick[1] desc
+:/blah ~ index[3^] << desc[*] 
+/bin size + scalar."vara"  * scalar.varb - scalar.varc - oldsize
+
+attribute[flags]."key"
+
+What if we also allowed a key value to tdbjoin. We could then
+combine the value of a completely differenty element with
+the incoming element.
+
+E.g. if the key /a represents some value that varies over time
+and we want that value assocatied with a set of file objects
+(we could just do a coinincident join) but where several
+keys are stored in the attr file.
+we could
+9ls |tea 'attr->"key" + filsize'
+
+What about being able to pass in a range.
+
+9ls |tea 'attr[1].(start,end)'
+
+tea 'tick[1].(1,4) 
+
+tick:2:/pw/devl/svr/ipex 
+attr:[flags]:[key[,range]]
+attr:[123+*?^@~%.]:"alpha","gamma"
+
+operators: << >> = , + * / . @
+
+/bin size + scalar::vara * scalar::varb - scalar::varc - oldsize
+
+tick:1:1,4
+tick:1:_,_
+
+Each statement is like a function call to join with all the
+flags symbolic and other arguments: inversion, key, range,
+btree.
+
+9ls |tea 'desc:+ tot:* tick:@'
+
+
+The coin and substitute could be operators instead of flags.
+
+desc @ tick  touch . fver
+
+And the prefix operator could be appended to the key
+
+tot::/in/ce/*
+
+Even the % flag could become an operator. We should name them.
+
+/bin % desc:*:/in/ce* tot:^: est::
+
+The operators
+	(blank)	standard join
+%	join with evt printed
+.	substitute key with target attribute (maybe -> should be the operator)
+@	coincidence join
+,	join shifting attributes right
+[*+-/]	arithmetic operators
+==	match, print only values that exist in attr
+!=	match, print only values that do not exist in attr
+<<	left rotate
+>> 	right rotate
+
+9ls |tea '@ tick'
+tea 'ls @ tick << desc:?  tmp'
+
+ls is a reserved word used to generate (select) the initial relation.
+tea can also be used as a shell.
+> ls @ tick
+> cd ..
+> ls::./* desc
+
+We could have a set of operators that work on the attribute stack: pop, push, rotate, exchange.
+Maybe we should view all operators as working on this stack, which is in fact many parrallel stacks.
+
+The standard join is removing the top value from the stack and replacing it. But isn't the element
+included in the stack. Which is the top? The element or attribute?
+Element is the top, and attribute second from top.
+For a standard join we pop element then attribute. Perform a join on element, then push the
+new attribute and the old element.
+But we might also modify the time, so we should therefore consider that the top of the stack.
+
+We can't just keep using symbols we need to use words.
+
+add div mul minus pop push 
+The top of the stack must be in different postions depending on the operator. We
+want a simple pop, push to work only of the attributes.
+
+This all might be breaking our original model of binary relations.
+
+We need to be able to do numeric comparisons for 3rd inversion
+if all the values are numbers. We can then do numeric ranges size:3n:1,10
+
+
+Join is '.' and join variants follow:
+
+.+ one more more
+.* zero or more
+.? zero or one
+
+9ls |tea '.? tick .* desc .+ `touch:%: - est * size + scalar::var
+
+
+tick?  tick* tick+ tick^ `tick ``tick*:4,3 .* est .+ size  result=_
+
+tick:_  	exact match (defualt)
+tick:_*	prefix
+tick:_,_	range
+tick:/a*	supplied key prefix
+tick:/a,/b	supplied key and range
+tick:/a	supplied key exact match
+
+tea 'index:string*'
+
+== !=
+tick == tot:/in/ce
+
+Each line is an operand stack. A typical join pops the top three
+values and joins with the attribute and pushs three values back on the
+stack.
+
+But any arbitrary operation is allowed, and the triad does
+not need to be always present. And values can appear on the stack
+
+% echo 1 2 |tea 'add'
+3
+% tea '1 2 add 5 mul 6 sub'
+9
+
+% tea '(2,4) rng tick desc?'
+
+Push 2,4 on stack, is piped to rng which pops one value from stack, evaluates rng and
+pushs two values on stack, the start and end of the range; tick then pops the two
+values from the stack, queries the range in the tick attribute and outputs as many
+new stacks as results in tick.
+
+Each line, or stack, is equivalent to an independent executing program.
+This definition does not allow operations between stacks like secs. We
+need another operation that looks in an attribute to find the *next* occurence
+so we can evaluate durations, instead of using secs. This will work like
+coin but find the next occurence instead of the last. Or it can be another
+flag to tdbjoin to print the following occurence or just the duration.
+
+rng tick ->tick
+
+Every operation is then a separately running process in the pipeline,
+even add, and mul etc.
+
+tea -f teafile
+
+So a value, like and effective date, can be pushed onto a stack, and then poped,
+much later on in a pipeline in order to set the effective date. So commands like
+tm/project can be executed.
+
+But only the top three values can be stored in an attribute.
+
+This stack model will also permit control structs etc. to make it complete.
+But there are always separate concurrent stacks, and an operation can *spawn*
+new stacks, but they do not interact once created.
+
+It's beginning to look like squint may be a good implementation language,
+or even better, limbo!
+
+(,) rng Range`* secd tick`* secs tock (/in/ce) grep s2d eff touch
+
+All attributes are predefined with all flags. Any attribute
+can take the form attr[flags]:[key[,range]].
+
+How do we do if else etc. That is, how do we follow different
+execution paths. We'd need the processor to spawn itself further
+on down the pipeline.
+The other thing would be the streches of code that do not
+include attributes can be executed  by one process.
+The other thing is to forget the pipeline idea and execute
+each tdb query as needed.
+We want to open a channel to a btree and keep it open
+while we execute all the consecutive stacks. We can do this
+by every time we come across an attribute we spawn a process
+That will read from our stdout and it recieves the full execution
+stack and the place in the execution.
+
+We then may have several concurrent processes writing to one stdout
+at the end of the pipeline.
+
+For each incoming stack
+setup internal operand stack
+foreach input token of program
+	lookup token in dictionary
+	if(attribute)
+		if(no channel)
+			open channel and pass it the program and program counter
+			and store channel in dict
+		write operand stack to channel
+	else if operator
+		execute operator
+	else if operand
+		push operand on stack
+}
+
+
+nil (/in/ce) now tick
+operators:
+	now
+	add
+	mul
+	div
+	sub
+	mod
+	rng
+	nil
+	eff
+	print
+	spawn
+
+How do we implement something like tock?
+For something like this to work a query against secs would have
+to push all the results onto the stack instead of output new triads
+for each result. ugh!
+Or we could push all the triads on a single stack.
+
+(1,4) rng tick
+
+The multiple results from tick all go on one stack.
+
+However, (1,4) 1 series 4 spawn tick
+
+spawn creates stacks for each range.
+It divides the stack into 4 stacks each with an equal number
+of elements.
+It divides a stack simply by printing newlines between the
+elements.
+
+We should have a triad object which we can push on a stack.
+And then all operations are between triads.
+
+So the add operator can work on integers or triads
+
+The triad command can pop the top three elements
+and push a triad on the stack.
+
+nil (/in/ce) now triad desc+
+
+0> nil (/in/ce) now triad desc+
+3> count
+4> {print}
+5> repeat
+...
+0>
+
+No. We simply have to be able to merge all the stacks back together.
+
+And none of this is much better than should using the rc shell
+and a pipeline.
+
+
+Now come on.
+Our basic principles were that it would be well integrated
+with other tools. We would bring awk, sort, uniq, rc all into
+play. We would not create another language or attempt
+to duplicate anything already in UNIX.
+
+The tea tool should simply read and write the data in the btree
+and do the joins. Everything else is up to the software
+tools that already exist.
+
+But on the other hand, the stack concept does make a lot of sense.
+We can do away with tdbexpr if we create a filter where by
+the top two elements are added.
+
+So we do a normal join and the top of the stack are the two
+attributes, then we filter that three an add or div operator.
+
+So we define tdbjoin as replacing the top of the stack, or
+pushing a new value on top. The bottom of the stack
+is always the effective time and the second from bottom
+is the element.
+
+We can reduce or tdb primitives to tdbjoin and tdbadd and tdbcoin.
+We could even fold tdbcoin into tdbjoin.
+
+What operators do we need to operate on the stack:
+	push
+	pop
+	add
+	mul
+	div
+	sub
+	ror	rotate right
+	rol	rotate left
+	exch		exchange	top two values
+	copy
+	index
+	rng
+
+All the above operators can be created as command line filters.
+Commands like eff and invert can then be seen
+as stack operators.
+Using the concept is simplifying and generalizing what we
+want to do with the results from tdbjoins.
+
+
+secs and tock are fundamentally different.
+
+We should eliminate secs by creating another type of join
+to calculate the duration. This would be more general.
+	next higher	(duration)
+	next lower	(coincidence)
+	exact
+	prefix
+	range
+	many
+	toggle
+	single
+
+
+We want to be able to save a whole stack in a btree as the attribute value.
+We can even store code in the attribute value.
+
+tick (start) (end) desc*r
+
+					OP
+attr	element	time		join		attr	newattr	element	time
+time element attr		join		time element attr attr
+	attr1 attr2			add		attr
+	attr1 attr2			exch		attr2 attr1
+
+The assignment operator should be postfix
+
+(This is the title) (desc) save
+All the join commands should be explicit
+
+(tick) join (desc) mjoin 
+
+Or rather attributes are recognized and pushed on the execution
+stack, and the operators are the flags.
+
+tick + desc * tot 10 add est save
+
+For each result of a join we step through the results
+	and push the value on the stack on then 
+	execute the next code on the machine
+	A whole entry gets pushed onto a stack,
+	and all ops work on entries.
+	We call the eval function recursively
+	for each result from a join, but with the
+	program counter incremented.
+
+We can do this is awk by calling getline on
+a tdbjoin. But we'd need to duplicate the stack
+for each nested call to eval.
+We'd need a save and restore for stacks.
+
+It's equivalent to
+foreach tick
+	foreach desc
+		foreach tot
+			10 add 
+			est save
+
+tick+ (desc* (tot (10 add est save))) 
+
+A join is also a spawn of a new stack for each result.
+So it would be possible to store code in a relation, join
+to it and then execute the code.
+
+The passed in code and the triad are catenated
+to form the program in reverse polish.
+The program is then executed.
+
+
+Parens enclose strings and objects like ranges (1,2)
+We also need operators like split and eval.

@@ -1,0 +1,21 @@
+Download version 0.50 files of the Project Gutenberg Webster dictionary
+from http://promo.net/pg
+
+For each file run the following sam script
+,x//c//
+,x/ & /c/ &amp; /
+1,/<p>/-1d
+w
+
+Concatentate all the files (cat *.txt > /lib/dict/pgw)
+Then build the index using mkindex.
+
+	% mkindex -d pgw > rawindex
+
+The raw index from mkindex needs cleaning, so
+edit in sam:
+,x/[`"|\*]/d
+,x/[ 	]*$/d
+
+Then run the canonind.awk script
+	% awk -f canonind.awk rawindex > /lib/dict/pgwindex

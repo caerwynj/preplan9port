@@ -1,0 +1,7 @@
+here's the plan 9 source.  you'll need to adjust it somewhat to compile
+locally, but the heart of it - the interpreter - should be fairly easy.
+you'll almost certainly want to drop libg and liblayer; they're graphics
+things (and in fact liblayer doesn't work right now because of changes
+in some of the operating systems stuff) that i've included as examples
+of how libraries are built.  (that is one thing i am not happy with).
+include/* are newsqueak headers; progs/* are test programs.

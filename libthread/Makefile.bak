@@ -1,0 +1,42 @@
+LIB=../lib/libthread.a
+
+OFILES=\
+	channel.o\
+	thread.o\
+	assert.o\
+	getthread.o\
+	ref.o\
+
+INCLUDES=-I../include
+
+#CFLAGS=-g -Wall -ffixed-ebx $(INCLUDES)
+CFLAGS=-g -ansi -Wall $(INCLUDES)
+
+CC=gcc
+
+all: $(LIB)
+
+$(LIB): $(OFILES) 386ref.o
+	ar r $(LIB) $(OFILES) 386ref.o
+
+clean:
+	rm -rf $(OFILES)
+
+world:;		make depend; make $(LIB)
+
+depend::;	makedepend $(CPPFLAGS) $(INCLUDES) $(OFILES:.o=.c)
+
+# DO NOT DELETE
+
+channel.o: ../include/u.h ../include/lib9.h ../include/threadassert.h
+channel.o: threadimpl.h ../include/thread.h
+thread.o: ../include/u.h ../include/lib9.h /usr/include/sys/stat.h
+thread.o: /usr/include/features.h /usr/include/sys/cdefs.h
+thread.o: /usr/include/gnu/stubs.h /usr/include/gnu/types.h
+thread.o: /usr/include/statbuf.h ../include/threadassert.h threadimpl.h
+thread.o: ../include/thread.h
+assert.o: ../include/u.h ../include/lib9.h ../include/threadassert.h
+assert.o: threadimpl.h ../include/thread.h
+getthread.o: ../include/u.h ../include/lib9.h threadimpl.h
+getthread.o: ../include/thread.h
+ref.o: ../include/u.h ../include/lib9.h threadimpl.h ../include/thread.h

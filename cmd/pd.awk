@@ -1,0 +1,207 @@
+# pd - postdate interpreter 
+#     input:  expressions in reverse Polish
+#     output: value of each expression
+BEGIN{
+	FS="\t"
+	args=ARGV[1]
+	ARGV[1]=""
+	ARGC--
+	daten="date -n"
+	daten | getline now
+	close(daten)
+	while("cd /home/xcs0998/ped; ls *.bt" |getline x > 0) {
+		sub(".bt", "", x)
+		attr[x] = 1
+	}
+}
+{ line=$0  (args ? " " args: "") ; eval(line)}
+
+func advance(		tok) {      # lexical analyzer; returns next token
+	if (tok == "(eof)") return "(eof)"
+	sub(/^[ \t]+/, "", line)   # remove white space
+	if (length(line) == 0)
+		return tok = "(eof)"
+	if (match(line, /^[A-Za-z_][A-Za-z_0-9]*[:~`\+\?\*\^=]*/) ||	# identifier
+		match(line, /^\/[A-Za-z_0-9\/\.-_]+/) || # element
+		match(line, /^[+-]?([0-9]+[.]?[0-9]*|[.][0-9]+)/) ||  # number
+		match(line, /^(<|<=|==|!=|>=|>|!~)/) ||		 # relational
+		match(line, /^./)) {					# everything else
+			tok = substr(line, 1, RLENGTH)
+			line = substr(line, RLENGTH+1)
+			return tok
+	}
+	print("line " NR " incomprehensible at " line)
+}
+
+func eval(		ln,l, flag, cmd, result, newlin) {
+	line = ln
+	tok = advance()
+	ln = line
+	while(tok != "(eof)") {
+		if (tok ~ /^[+-]?([0-9]+[.]?[0-9]*|[.][0-9]+)$/) {
+			stack[++top] = tok
+		} else if (tok ~ /^\/[A-Za-z_0-9\/\.-_]+$/) {
+			stack[++top] = tok
+		} else if (tok == "{") {
+			n = 1
+			stack[++top] = "{"
+			while(n >= 1 && tok != "(eof)") {
+				tok = advance()
+#				print tok
+				if(tok == "{")
+					n++
+				else if(tok == "}")
+					n--
+				stack[top] = stack[top] " " tok
+			}
+		} else if (tok == "(") {
+			stack[++top] = ""
+			if (match(line, /^([^\)]*\))/)) {
+				tok = substr(line, 1, RLENGTH)
+				line = substr(line, RLENGTH+1)
+				stack[top] = "(" tok
+			}
+		} else if (tok == "clear") {
+			top=0
+		} else if (tok == "end") {
+			top = 0
+			tok="(eof)"
+			line=""
+		} else if (tok == "if" && top > 1) {
+			if(stack[top - 1] == 1) {
+				sub(/^{/, "", stack[top])
+				sub(/}$/, "", stack[top])
+				line = stack[top] " " line
+			}
+			top = top - 2
+		} else if (tok == "repeat" && top > 1) {
+			n = stack[top - 1]
+			sub(/^{/, "", stack[top])
+			sub(/}$/, "", stack[top])
+			for (i = 0; i < n; i++) {
+				line = stack[top] " " line
+			}
+			top = top - 2
+		} else if (tok == "exec" && top > 0) {
+			sub(/^{/, "", stack[top])
+			sub(/}$/, "", stack[top])
+			line = stack[top] " " line; top--
+		} else if (tok == "eq" && top > 1) {
+			stack[top-1] = (stack[top] == stack[top-1]); top--
+		} else if (tok == "ne" && top > 1) {
+			stack[top-1] = (stack[top] != stack[top-1]); top--
+		} else if (tok == "+" && top > 1) {
+			stack[top-1] += stack[top]; top--
+		} else if (tok == "-" && top > 1) {
+			stack[top-1] -= stack[top]; top--
+		} else if (tok == "*" && top > 1) {
+			stack[top-1] *= stack[top]; top--
+		} else if (tok == "/" && top > 1) {
+			stack[top-1] /= stack[top]; top--
+		} else if (tok == "^" && top > 1) {
+			stack[top-1] ^= stack[top]; top--
+		} else if (tok == "sin" && top > 0) {
+			stack[top] = sin(stack[top])
+		} else if (tok == "cos" && top > 0) {
+			stack[top] = cos(stack[top])
+		} else if (tok == "atan2" && top > 1) {
+			stack[top-1] = atan2(stack[top-1],stack[top]); top--
+		} else if (tok == "log" && top > 0) {
+			stack[top] = log(stack[top])
+		} else if (tok == "exp" && top > 0) {
+			stack[top] = exp(stack[top])
+		} else if (tok == "sqrt" && top > 0) {
+			stack[top] = sqrt(stack[top])
+		} else if (tok == "int" && top > 0) {
+			stack[top] = int(stack[top])
+		} else if (tok == "pop" && top > 0) {
+			top--
+		} else if (tok == "copy" && top > 0) {
+			n = stack[top--]
+			for (i = 1; i <= n; i++)
+				stack[top+i] = stack[top-(n - i)]
+			top += n
+		} else if (tok == "exch" && top > 1) {
+			t = stack[top]
+			stack[top] = stack[top - 1]
+			stack[top - 1] = t
+		} else if (tok == "dup" && top > 0) {
+			stack[top+1] = stack[top]; top++
+		} else if (tok == "now") {
+			daten="date -n"
+			daten | getline now
+			close(daten)
+			stack[++top] = now
+		} else if ((tok ~ /^[a-zA-Z][a-zA-Z0-9]*[`:~\+\?\*\^]*$/ || tok in attr) && top > 2) {
+			flag = " -v "
+			if(tok ~ /[`:~\+\?\*\^]$/) {
+				while(match(tok, /[`:~\+\?\*\^]$/)) {
+					f = substr(tok, RSTART, RLENGTH)
+					tok = substr(tok, 1, length(tok) - RLENGTH)
+#					print f, tok
+					if(f == "+") {
+						flag =  flag " -m "
+					}else if(f == "*"){
+						flag =   flag " -om "
+					}else if(f == "?"){
+						flag =   flag " -o "
+					}else if(f == "^"){
+						flag =   flag " -t "
+					}else if(f == ":"){
+						flag =  flag " -r "
+					}else if(f == "~"){
+						flag=  flag " -p "
+					}else if(f == "`"){
+						flag= flag " -1 "
+					}
+				}
+			}
+			a=stack[top--]
+			e=stack[top--]
+			t=stack[top--]
+#			print flag
+			cmd = "triad "t" "e" '"a"' |tdbjoin  "flag" /home/xcs0998/ped/"tok".bt"
+			l=""
+			for (i = 1; i<= top; i++)
+				l = l " " stack[i]
+
+			top=0
+			line=""
+			tok="(eof)"
+			while(cmd | getline > 0) {
+				if ($3 ~ /^[+-]?([0-9]+[.]?[0-9]*|[.][0-9]+)$/)
+					atr = $3
+				else if ($3 == "")
+					atr = 0
+				else if ($3 ~ /^\/[A-Za-z_0-9\/\.-_]+/)
+					atr = $3
+				else
+					atr = "(" $3 ")"
+				newlin = l " " $1 " " $2 " " atr (ln ? " " ln : ln)
+				eval(newlin)
+			}
+			top=0
+			line=""
+			tok="(eof)"
+			close(cmd)
+		} else if (tok in vars) {
+			stack[++top] = vars[tok]
+		} else if (tok ~ /^[a-zA-Z][a-zA-Z0-9]*=$/ && top > 0) {
+			vars[substr(tok, 1, length(tok)-1)] = stack[top--]
+		} else {
+			printf("error: cannot evaluate %s\n", tok)
+			top = 0
+		}
+		tok = advance()
+		ln = line
+#		print top,stack[top]
+	}
+	if (top == 1 && tok == "(eof)")
+		printf("%s\n", stack[top--])
+  	else if (top > 1) {
+		for (i = 1; i <= top; i++)
+			printf("%s%s", stack[i], (i==top? "\n": "\t"))
+  	}
+	top = 0
+	tok=""
+}

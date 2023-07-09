@@ -1,0 +1,13 @@
+all: $(EXE)
+$(EXE): $(OBJECTS) Makefile
+
+install:
+	for i in *.exe;\
+	do mv $$i $(BIN)/`basename $$i .exe`;\
+	done
+
+clean:
+	rm -f $(OBJECTS) *.o
+
+clobber:
+	rm -f $(EXE)

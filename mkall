@@ -1,0 +1,16 @@
+all: 9 bio regexp stdio
+
+9:
+	(cd lib9; make)
+
+bio:
+	(cd libbio; make)
+
+regexp:
+	(cd libregexp; make)
+
+cmds:
+	(cd cmd; make)
+
+stdio:
+	(cd libstdio; make)

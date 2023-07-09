@@ -1,0 +1,819 @@
+default targets 'v.out'
+rules: start=194832
+	Rule 194832: mkfile[19] attr=0 next=195132 chain=0 alltarget='v.out'
+	target=v.out: squint.v alloc.v bltin.v compile.v const.v declare.v error.v lex.v main.v node.v symbol.v type.v xec.v arith.v ctl.v proc.v var.v arith.v ctl.v proc.v var.v libu.v libio.v liblib.v libg.v libio.v liblib.v liblayer.v
+	recipe@194812='$LD $prereq
+'
+	Rule 195132: mkfile[22] attr=0 next=195200 chain=0 alltarget='y.tab.h squint.c'
+	target=y.tab.h: squint.y short.y.debug
+	recipe@195036='yacc -D -d squint.y
+mv y.tab.c squint.c
+diff y.debug ref.y.debug
+cp short.y.debug y.debug
+'
+	Rule 195200: mkfile[22] attr=0 next=195368 chain=0 alltarget='y.tab.h squint.c'
+	target=squint.c: squint.y short.y.debug
+	recipe@195036='yacc -D -d squint.y
+mv y.tab.c squint.c
+diff y.debug ref.y.debug
+cp short.y.debug y.debug
+'
+	Rule 195368: mkfile[27] attr=10 next=206272 chain=0 alltarget='ydefs.h'
+	target=ydefs.h: y.tab.h
+	recipe@195316='cmp -s y.tab.h ydefs.h || cp y.tab.h ydefs.h
+'
+	Rule 206272: mkfile[53] attr=0 next=206340 chain=0 alltarget='squint.v alloc.v bltin.v compile.v const.v declare.v error.v lex.v main.v node.v symbol.v type.v xec.v arith.v ctl.v proc.v var.v'
+	target=squint.v: fns.h
+	recipe@205228=''
+	Rule 206340: mkfile[53] attr=0 next=206408 chain=0 alltarget='squint.v alloc.v bltin.v compile.v const.v declare.v error.v lex.v main.v node.v symbol.v type.v xec.v arith.v ctl.v proc.v var.v'
+	target=alloc.v: fns.h
+	recipe@205228=''
+	Rule 206408: mkfile[53] attr=0 next=206476 chain=0 alltarget='squint.v alloc.v bltin.v compile.v const.v declare.v error.v lex.v main.v node.v symbol.v type.v xec.v arith.v ctl.v proc.v var.v'
+	target=bltin.v: fns.h
+	recipe@205228=''
+	Rule 206476: mkfile[53] attr=0 next=206544 chain=0 alltarget='squint.v alloc.v bltin.v compile.v const.v declare.v error.v lex.v main.v node.v symbol.v type.v xec.v arith.v ctl.v proc.v var.v'
+	target=compile.v: fns.h
+	recipe@205228=''
+	Rule 206544: mkfile[53] attr=0 next=206612 chain=0 alltarget='squint.v alloc.v bltin.v compile.v const.v declare.v error.v lex.v main.v node.v symbol.v type.v xec.v arith.v ctl.v proc.v var.v'
+	target=const.v: fns.h
+	recipe@205228=''
+	Rule 206612: mkfile[53] attr=0 next=206680 chain=0 alltarget='squint.v alloc.v bltin.v compile.v const.v declare.v error.v lex.v main.v node.v symbol.v type.v xec.v arith.v ctl.v proc.v var.v'
+	target=declare.v: fns.h
+	recipe@205228=''
+	Rule 206680: mkfile[53] attr=0 next=206748 chain=0 alltarget='squint.v alloc.v bltin.v compile.v const.v declare.v error.v lex.v main.v node.v symbol.v type.v xec.v arith.v ctl.v proc.v var.v'
+	target=error.v: fns.h
+	recipe@205228=''
+	Rule 206748: mkfile[53] attr=0 next=206816 chain=0 alltarget='squint.v alloc.v bltin.v compile.v const.v declare.v error.v lex.v main.v node.v symbol.v type.v xec.v arith.v ctl.v proc.v var.v'
+	target=lex.v: fns.h
+	recipe@205228=''
+	Rule 206816: mkfile[53] attr=0 next=206864 chain=0 alltarget='squint.v alloc.v bltin.v compile.v const.v declare.v error.v lex.v main.v node.v symbol.v type.v xec.v arith.v ctl.v proc.v var.v'
+	target=main.v: fns.h
+	recipe@205228=''
+	Rule 206864: mkfile[53] attr=0 next=206932 chain=0 alltarget='squint.v alloc.v bltin.v compile.v const.v declare.v error.v lex.v main.v node.v symbol.v type.v xec.v arith.v ctl.v proc.v var.v'
+	target=node.v: fns.h
+	recipe@205228=''
+	Rule 206932: mkfile[53] attr=0 next=207000 chain=0 alltarget='squint.v alloc.v bltin.v compile.v const.v declare.v error.v lex.v main.v node.v symbol.v type.v xec.v arith.v ctl.v proc.v var.v'
+	target=symbol.v: fns.h
+	recipe@205228=''
+	Rule 207000: mkfile[53] attr=0 next=207068 chain=0 alltarget='squint.v alloc.v bltin.v compile.v const.v declare.v error.v lex.v main.v node.v symbol.v type.v xec.v arith.v ctl.v proc.v var.v'
+	target=type.v: fns.h
+	recipe@205228=''
+	Rule 207068: mkfile[53] attr=0 next=207136 chain=0 alltarget='squint.v alloc.v bltin.v compile.v const.v declare.v error.v lex.v main.v node.v symbol.v type.v xec.v arith.v ctl.v proc.v var.v'
+	target=xec.v: fns.h
+	recipe@205228=''
+	Rule 207136: mkfile[53] attr=0 next=207204 chain=207592 alltarget='squint.v alloc.v bltin.v compile.v const.v declare.v error.v lex.v main.v node.v symbol.v type.v xec.v arith.v ctl.v proc.v var.v'
+	target=arith.v: fns.h
+	recipe@205228=''
+	Rule 207204: mkfile[53] attr=0 next=207272 chain=207640 alltarget='squint.v alloc.v bltin.v compile.v const.v declare.v error.v lex.v main.v node.v symbol.v type.v xec.v arith.v ctl.v proc.v var.v'
+	target=ctl.v: fns.h
+	recipe@205228=''
+	Rule 207272: mkfile[53] attr=0 next=207340 chain=207688 alltarget='squint.v alloc.v bltin.v compile.v const.v declare.v error.v lex.v main.v node.v symbol.v type.v xec.v arith.v ctl.v proc.v var.v'
+	target=proc.v: fns.h
+	recipe@205228=''
+	Rule 207340: mkfile[53] attr=0 next=207592 chain=207736 alltarget='squint.v alloc.v bltin.v compile.v const.v declare.v error.v lex.v main.v node.v symbol.v type.v xec.v arith.v ctl.v proc.v var.v'
+	target=var.v: fns.h
+	recipe@205228=''
+	Rule 207592: mkfile[54] attr=0 next=207640 chain=0 alltarget='arith.v ctl.v proc.v var.v'
+	target=arith.v: comm.h store.h
+	recipe@207420=''
+	Rule 207640: mkfile[54] attr=0 next=207688 chain=0 alltarget='arith.v ctl.v proc.v var.v'
+	target=ctl.v: comm.h store.h
+	recipe@207420=''
+	Rule 207688: mkfile[54] attr=0 next=207736 chain=0 alltarget='arith.v ctl.v proc.v var.v'
+	target=proc.v: comm.h store.h
+	recipe@207420=''
+	Rule 207736: mkfile[54] attr=0 next=208048 chain=0 alltarget='arith.v ctl.v proc.v var.v'
+	target=var.v: comm.h store.h
+	recipe@207420=''
+	Rule 208048: mkfile[55] attr=0 next=208116 chain=0 alltarget='libu.c libio.c liblib.c libg.c libio.c liblib.c liblayer.c'
+	target=libu.c: comm.h store.h libargs.h
+	recipe@207440=''
+	Rule 208116: mkfile[55] attr=0 next=208184 chain=0 alltarget='libu.c libio.c liblib.c libg.c libio.c liblib.c liblayer.c'
+	target=libio.c: comm.h store.h libargs.h
+	recipe@207440=''
+	Rule 208184: mkfile[55] attr=0 next=208252 chain=0 alltarget='libu.c libio.c liblib.c libg.c libio.c liblib.c liblayer.c'
+	target=liblib.c: comm.h store.h libargs.h
+	recipe@207440=''
+	Rule 208252: mkfile[55] attr=0 next=208320 chain=0 alltarget='libu.c libio.c liblib.c libg.c libio.c liblib.c liblayer.c'
+	target=libg.c: comm.h store.h libargs.h
+	recipe@207440=''
+	Rule 208320: mkfile[55] attr=0 next=208488 chain=0 alltarget='libu.c libio.c liblib.c libg.c libio.c liblib.c liblayer.c'
+	target=liblayer.c: comm.h store.h libargs.h
+	recipe@207440=''
+	Rule 208488: mkfile[57] attr=0 next=208656 chain=0 alltarget='libu'
+	target=libu: libu.h
+	recipe@208444='cat liblib.h libu.h libio.h > lib.h
+
+'
+	Rule 208656: mkfile[60] attr=0 next=208920 chain=0 alltarget='libg'
+	target=libg: libg.h
+	recipe@208604='cat liblib.h libg.h libio.h liblayer.h > lib.h
+'
+	Rule 208920: mkfile[64] attr=0 next=208988 chain=0 alltarget='nodenames.h typenames.h'
+	target=nodenames.h: node.h enumtoname
+	recipe@208832='enumtoname Ntype < node.h > nodenames.h
+enumtoname Ttype < node.h > typenames.h
+'
+	Rule 208988: mkfile[64] attr=0 next=209512 chain=0 alltarget='nodenames.h typenames.h'
+	target=typenames.h: node.h enumtoname
+	recipe@208832='enumtoname Ntype < node.h > nodenames.h
+enumtoname Ttype < node.h > typenames.h
+'
+	Rule 209512: mkfile[68] attr=10 next=209580 chain=0 alltarget='inst.h insttab.h'
+	target=inst.h: inst
+	recipe@209132='echo build inst.h insttab.h
+( echo "typedef enum Inst{"
+	sed 's/.*/	&,/' inst;
+	echo "	NInst";
+echo "}Inst;"
+sed 's/^I/extern int i/;s/$/(Proc *);/' inst
+echo "extern struct Insttab{ int (*fp)(Proc *); char *name;} insttab[];") > inst.h
+( sed 's/^I/i/;s/.*/extern int &();/' inst;
+echo "struct Insttab insttab[]={"
+sed 's/.\(.*\)/	i\1, "&",/' inst
+echo "};") > insttab.h
+
+'
+	Rule 209580: mkfile[68] attr=10 next=209896 chain=0 alltarget='inst.h insttab.h'
+	target=insttab.h: inst
+	recipe@209132='echo build inst.h insttab.h
+( echo "typedef enum Inst{"
+	sed 's/.*/	&,/' inst;
+	echo "	NInst";
+echo "}Inst;"
+sed 's/^I/extern int i/;s/$/(Proc *);/' inst
+echo "extern struct Insttab{ int (*fp)(Proc *); char *name;} insttab[];") > inst.h
+( sed 's/^I/i/;s/.*/extern int &();/' inst;
+echo "struct Insttab insttab[]={"
+sed 's/.\(.*\)/	i\1, "&",/' inst
+echo "};") > insttab.h
+
+'
+	Rule 209896: mkfile[81] attr=10 next=210040 chain=0 alltarget='inst'
+	target=inst: arith.c ctl.c proc.c var.c
+	recipe@209768='cat $CODE | grep '^i.*(Proc \*proc)' | sed 's/^i/I/; s/(.*//; s/.*/&/' | sort > ninst
+cmp -s inst ninst || mv ninst inst
+'
+	Rule 210040: mkfile[85] attr=0 next=210232 chain=0 alltarget='regress'
+	target=regress: squint
+	recipe@210012='regress
+touch regress
+'
+	Rule 210232: mkfile[88] attr=0 next=210360 chain=0 alltarget='backup'
+	target=backup: 
+	recipe@210132='ar uv arch $FILES $H mkfile enumtoname regress $LIBSRC include/*.h ref.y.debug short.y.debug
+'
+	Rule 210360: mkfile[91] attr=0 next=210476 chain=0 alltarget='pr'
+	target=pr: 
+	recipe@210320='pr $H $FILES $LIBSRC | lp -2 -dpsu
+'
+	Rule 210476: mkfile[93] attr=0 next=210628 chain=0 alltarget='clean'
+	target=clean: 
+	recipe@210452='rm -f *.[2ov] core
+'
+	Rule 210628: mkfile[96] attr=0 next=0 chain=0 alltarget='install'
+	target=install: squint
+	recipe@210592='regress
+cp squint /usr/rob/bin
+'
+metarules: start=195496
+	Rule 195496: mkfile[30] attr=1 next=195624 chain=195624 alltarget='%.v'
+	target=%.v: %.c
+	recipe@195476='$CC -w $stem.c
+'
+	Rule 195624: mkfile[32] attr=1 next=195824 chain=0 alltarget='%.v'
+	target=%.v: %.s
+	recipe@195604='$AS $stem.s
+'
+	Rule 195824: mkfile[35] attr=41 next=196524 chain=203620 alltarget='bltin.[v]'
+	target=bltin.[v]: comm.h inst.h store.h node.h symbol.h
+	recipe@191700=''
+	Rule 196524: mkfile[36] attr=41 next=197200 chain=0 alltarget='compile.[v]'
+	target=compile.[v]: comm.h inst.h node.h symbol.h ydefs.h store.h errjmp.h
+	recipe@191720=''
+	Rule 197200: mkfile[37] attr=41 next=197824 chain=0 alltarget='const.[v]'
+	target=const.[v]: store.h node.h symbol.h ydefs.h errjmp.h
+	recipe@196312=''
+	Rule 197824: mkfile[38] attr=41 next=198556 chain=0 alltarget='declare.[v]'
+	target=declare.[v]: store.h node.h symbol.h ydefs.h
+	recipe@197036=''
+	Rule 198556: mkfile[39] attr=41 next=199208 chain=0 alltarget='error.[v]'
+	target=error.[v]: store.h node.h nodenames.h symbol.h typenames.h errjmp.h ydefs.h
+	recipe@197688=''
+	Rule 199208: mkfile[40] attr=41 next=199732 chain=0 alltarget='lex.[v]'
+	target=lex.[v]: store.h node.h symbol.h ydefs.h
+	recipe@199056=''
+	Rule 199732: mkfile[41] attr=41 next=200344 chain=206816 alltarget='main.v'
+	target=main.v: errjmp.h
+	recipe@199076=''
+	Rule 200344: mkfile[42] attr=41 next=200956 chain=0 alltarget='node.[v]'
+	target=node.[v]: store.h node.h symbol.h ydefs.h
+	recipe@199672=''
+	Rule 200956: mkfile[43] attr=41 next=201592 chain=0 alltarget='squint.[v]'
+	target=squint.[v]: store.h node.h symbol.h ydefs.h
+	recipe@200208=''
+	Rule 201592: mkfile[44] attr=41 next=202280 chain=0 alltarget='symbol.[v]'
+	target=symbol.[v]: store.h node.h symbol.h ydefs.h
+	recipe@200820=''
+	Rule 202280: mkfile[45] attr=41 next=202972 chain=0 alltarget='type.[v]'
+	target=type.[v]: store.h node.h symbol.h ydefs.h store.h errjmp.h
+	recipe@201456=''
+	Rule 202972: mkfile[46] attr=41 next=203620 chain=0 alltarget='xec.[v]'
+	target=xec.[v]: store.h node.h inst.h insttab.h comm.h errjmp.h
+	recipe@202768=''
+	Rule 203620: mkfile[47] attr=41 next=204176 chain=0 alltarget='bltin.[v]'
+	target=bltin.[v]: comm.h inst.h node.h symbol.h store.h lib.h
+	recipe@202788=''
+	Rule 204176: mkfile[49] attr=41 next=204740 chain=0 alltarget='libg.[v]'
+	target=libg.[v]: libgfns.h space.h
+	recipe@203436=''
+	Rule 204740: mkfile[50] attr=41 next=205316 chain=0 alltarget='space.[v]'
+	target=space.[v]: libgfns.h space.h
+	recipe@204088=''
+	Rule 205316: mkfile[51] attr=41 next=0 chain=0 alltarget='fmount.[v]'
+	target=fmount.[v]: libgfns.h space.h
+	recipe@204652=''
+variables:
+	apid='26'
+	0='#d/0'
+	H='comm.h errjmp.h node.h store.h symbol.h ydefs.h fns.h space.h'
+	O='v'
+	Q='squint.2@alloc.2@bltin.2@compile.2@const.2@declare.2@error.2@lex.2@main.2@node.2@symbol.2@type.2@xec.2@arith.2@ctl.2@proc.2@var.2@space.2@fmount.2'
+	V='squint.v@alloc.v@bltin.v@compile.v@const.v@declare.v@error.v@lex.v@main.v@node.v@symbol.v@type.v@xec.v@arith.v@ctl.v@proc.v@var.v'
+	LEX='lex'
+	status='error'
+	LIBSRC='libargs.h liblib.h libu.h libg.h libgfns.h nprocs = 3
+liblayer.h libu.c libg.c libio.c liblayer.c liblib.c tobm.c space.c fmount.c'
+	timezone='EST -18000 EDT -14400
+   9943200   25664400   41392800   57718800   73447200   89168400
+ 104896800  120618000  126669600  152067600  162352800  183517200
+ 199245600  215571600  230695200  247021200  262749600  278470800
+ 294199200  309920400  325648800  341370000  357098400  372819600
+ 388548000  404874000  419997600  436323600  452052000  467773200
+ 483501600  499222800  514951200  530672400  544586400  562122000
+ 576036000  594176400  607485600  625626000  638935200  657075600
+ 670989600  688525200  702439200  719974800  733888800  752029200
+ 765338400  783478800  796788000  814928400  828842400  846378000
+ 860292000  877827600  891741600  909277200  923191200  941331600
+ 954640800  972781200  986695200 1004230800 1018144800 1035680400
+1049594400 1067130000 1081044000 1099184400 1112493600 1130634000
+1143943200 1162083600 1175997600 1193533200 1207447200 1224982800
+1238896800 1256432400 1270346400 1288486800 1301796000 1319936400
+1333850400 1351386000 1365300000 1382835600 1396749600 1414285200
+1428199200 1445734800 1459648800 1477789200 1491098400 1509238800
+1523152800 1540688400 1554602400 1572138000 1586052000 1603587600
+1617501600 1635642000 1648951200 1667091600 1680400800 1698541200
+1712455200 1729990800 1743904800 1761440400 1775354400 1792890000
+1806804000 1824944400 1838253600 1856394000 1870308000 1887843600
+1901757600 1919293200 1933207200 1950742800 1964656800 1982797200
+1996106400 2014246800 2027556000 2045696400 2059610400 2077146000
+2091060000 2108595600 2122509600 2140045200
+'
+	LIBUV='libio.v@liblib.v'
+	LIBUO='libu.o@libio.o@liblib.o'
+	LIB='libu.c libio.c liblib.c libg.c libio.c liblib.c liblayer.c'
+	user='rob'
+	MKARGS='clean'
+	CFLAGS=''
+	NPROC='3'
+	FILES='squint.y alloc.c bltin.c compile.c const.c declare.c error.c lex.c main.c node.c symbol.c type.c xec.c arith.c ctl.c proc.c var.c'
+	cputype='mips'
+	MKFLAGS='-n'
+	NREP='1'
+	AS='va'
+	LFLAGS=''
+	CC='vc'
+	CO='arith.v ctl.v proc.v var.v'
+	CQ='arith.2@ctl.2@proc.2@var.2'
+	CV='arith.v@ctl.v@proc.v@var.v'
+	FC='f77'
+	FO='squint.v alloc.v bltin.v compile.v const.v declare.v error.v lex.v main.v node.v symbol.v type.v xec.v arith.v ctl.v proc.v var.v'
+	FFLAGS=''
+	LIBGV='libg.v@libio.v@liblib.v@liblayer.v'
+	LIBGQ='libg.2@libio.2@liblib.2@liblayer.2'
+	CPUS='mips 68020 sparc 386'
+	YACC='yacc'
+	LD='vl'
+	tab='	'
+	home='/usr/rob'
+	OS='2kovz8'
+	CODE='arith.c ctl.c proc.c var.c'
+	pid='20239'
+	sysname='helix'
+	RL='rl'
+	path='.@/bin'
+	objtype='mips'
+	site='plan9'
+	service='cpu'
+	SPACE='space.c fmount.c'
+	boottime='Fri Jul  5 10:56:43 EDT 1991
+'
+	YFLAGS=''
+	ps1='% '
+	LDFLAGS=''
+	helpboot='edit@cbr@db@mail'
+	BUILTINS=''
+	prompt='squint% @	'
+	terminal='sgi power 4D'
+	ifs=' 	
+'
+	name='dk!nj/astro/coma'
+	LIBG='libg.c@libio.c@liblib.c@liblayer.c'
+	LIBO='libu.v libio.v liblib.v libg.v libio.v liblib.v liblayer.v'
+	LIBU='libu.c@libio.c@liblib.c'
+	ENVIRON=''
+nreps = 1
+new target
+v.out@215812: time=0 flags=0x104 next=0
+   Arc@221896: n=218464 r=194832 flag=0x0 stem=''
+       squint.v@218464: time=0 flags=0x104 next=0
+          Arc@219912: n=218520 r=206272 flag=0x0 stem=''
+              fns.h@218520: time=678739531 flags=0x104 next=0
+          Arc@220456: n=220044 r=195496 flag=0x0 stem='squint'
+              squint.c@220044: time=678739995 flags=0x104 next=0
+                 Arc@220148: n=220104 r=195200 flag=0x0 stem=''
+                     squint.y@220104: time=678739967 flags=0x104 next=0
+                 Arc@220328: n=220284 r=195200 flag=0x0 stem=''
+                     short.y.debug@220284: time=678739258 flags=0x104 next=0
+          Arc@220832: n=220780 r=200956 flag=0x0 stem=''
+              store.h@220780: time=678740272 flags=0x104 next=0
+          Arc@221012: n=220960 r=200956 flag=0x0 stem=''
+              node.h@220960: time=678739254 flags=0x104 next=0
+          Arc@221196: n=221144 r=200956 flag=0x0 stem=''
+              symbol.h@221144: time=678740109 flags=0x104 next=0
+          Arc@221780: n=221324 r=200956 flag=0x0 stem=''
+              ydefs.h@221324: time=678739254 flags=0x104 next=0
+                 Arc@221656: n=221380 r=195368 flag=0x0 stem=''
+                     y.tab.h@221380: time=678739994 flags=0x104 next=0
+                        Arc@221424: n=220104 r=195132 flag=0x0 stem=''
+                            squint.y@220104: time=678739967 flags=0x104 next=0
+                        Arc@221540: n=220284 r=195132 flag=0x0 stem=''
+                            short.y.debug@220284: time=678739258 flags=0x104 next=0
+   Arc@222560: n=222024 r=194832 flag=0x0 stem=''
+       alloc.v@222024: time=678740769 flags=0x104 next=0
+          Arc@222068: n=218520 r=206340 flag=0x0 stem=''
+              fns.h@218520: time=678739531 flags=0x104 next=0
+          Arc@222252: n=222196 r=195496 flag=0x0 stem='alloc'
+              alloc.c@222196: time=678739437 flags=0x104 next=0
+   Arc@225592: n=222688 r=194832 flag=0x0 stem=''
+       bltin.v@222688: time=0 flags=0x104 next=0
+          Arc@222732: n=218520 r=206408 flag=0x0 stem=''
+              fns.h@218520: time=678739531 flags=0x104 next=0
+          Arc@222916: n=222860 r=195496 flag=0x0 stem='bltin'
+              bltin.c@222860: time=678739257 flags=0x104 next=0
+          Arc@223288: n=223236 r=195824 flag=0x0 stem=''
+              comm.h@223236: time=678740293 flags=0x104 next=0
+          Arc@224304: n=194900 r=195824 flag=0x0 stem=''
+              inst.h@194900: time=678739257 flags=0x104 next=0
+                 Arc@224180: n=223448 r=209512 flag=0x0 stem=''
+                     inst@223448: time=678739257 flags=0x104 next=0
+                        Arc@223548: n=223504 r=209896 flag=0x0 stem=''
+                            arith.c@223504: time=678739254 flags=0x104 next=0
+                        Arc@223720: n=223676 r=209896 flag=0x0 stem=''
+                            ctl.c@223676: time=678740970 flags=0x104 next=0
+                        Arc@223892: n=223848 r=209896 flag=0x0 stem=''
+                            proc.c@223848: time=678740761 flags=0x104 next=0
+                        Arc@224064: n=224020 r=209896 flag=0x0 stem=''
+                            var.c@224020: time=678739256 flags=0x104 next=0
+          Arc@224428: n=220780 r=195824 flag=0x0 stem=''
+              store.h@220780: time=678740272 flags=0x104 next=0
+          Arc@224552: n=220960 r=195824 flag=0x0 stem=''
+              node.h@220960: time=678739254 flags=0x104 next=0
+          Arc@224676: n=221144 r=195824 flag=0x0 stem=''
+              symbol.h@221144: time=678740109 flags=0x104 next=0
+          Arc@224800: n=223236 r=203620 flag=0x0 stem=''
+              comm.h@223236: time=678740293 flags=0x104 next=0
+          Arc@224924: n=194900 r=203620 flag=0x0 stem=''
+              inst.h@194900: time=678739257 flags=0x104 next=0
+                 Arc@224180: n=223448 r=209512 flag=0x0 stem=''
+                     inst@223448: time=678739257 flags=0x104 next=0
+                        Arc@223548: n=223504 r=209896 flag=0x0 stem=''
+                            arith.c@223504: time=678739254 flags=0x104 next=0
+                        Arc@223720: n=223676 r=209896 flag=0x0 stem=''
+                            ctl.c@223676: time=678740970 flags=0x104 next=0
+                        Arc@223892: n=223848 r=209896 flag=0x0 stem=''
+                            proc.c@223848: time=678740761 flags=0x104 next=0
+                        Arc@224064: n=224020 r=209896 flag=0x0 stem=''
+                            var.c@224020: time=678739256 flags=0x104 next=0
+          Arc@225048: n=220960 r=203620 flag=0x0 stem=''
+              node.h@220960: time=678739254 flags=0x104 next=0
+          Arc@225172: n=221144 r=203620 flag=0x0 stem=''
+              symbol.h@221144: time=678740109 flags=0x104 next=0
+          Arc@225296: n=220780 r=203620 flag=0x0 stem=''
+              store.h@220780: time=678740272 flags=0x104 next=0
+          Arc@225476: n=225424 r=203620 flag=0x0 stem=''
+              lib.h@225424: time=678740407 flags=0x104 next=0
+   Arc@227196: n=225724 r=194832 flag=0x0 stem=''
+       compile.v@225724: time=0 flags=0x104 next=0
+          Arc@225768: n=218520 r=206476 flag=0x0 stem=''
+              fns.h@218520: time=678739531 flags=0x104 next=0
+          Arc@225956: n=225900 r=195496 flag=0x0 stem='compile'
+              compile.c@225900: time=678739254 flags=0x104 next=0
+          Arc@226276: n=223236 r=196524 flag=0x0 stem=''
+              comm.h@223236: time=678740293 flags=0x104 next=0
+          Arc@226400: n=194900 r=196524 flag=0x0 stem=''
+              inst.h@194900: time=678739257 flags=0x104 next=0
+                 Arc@224180: n=223448 r=209512 flag=0x0 stem=''
+                     inst@223448: time=678739257 flags=0x104 next=0
+                        Arc@223548: n=223504 r=209896 flag=0x0 stem=''
+                            arith.c@223504: time=678739254 flags=0x104 next=0
+                        Arc@223720: n=223676 r=209896 flag=0x0 stem=''
+                            ctl.c@223676: time=678740970 flags=0x104 next=0
+                        Arc@223892: n=223848 r=209896 flag=0x0 stem=''
+                            proc.c@223848: time=678740761 flags=0x104 next=0
+                        Arc@224064: n=224020 r=209896 flag=0x0 stem=''
+                            var.c@224020: time=678739256 flags=0x104 next=0
+          Arc@226524: n=220960 r=196524 flag=0x0 stem=''
+              node.h@220960: time=678739254 flags=0x104 next=0
+          Arc@226648: n=221144 r=196524 flag=0x0 stem=''
+              symbol.h@221144: time=678740109 flags=0x104 next=0
+          Arc@226772: n=221324 r=196524 flag=0x0 stem=''
+              ydefs.h@221324: time=678739254 flags=0x104 next=0
+                 Arc@221656: n=221380 r=195368 flag=0x0 stem=''
+                     y.tab.h@221380: time=678739994 flags=0x104 next=0
+                        Arc@221424: n=220104 r=195132 flag=0x0 stem=''
+                            squint.y@220104: time=678739967 flags=0x104 next=0
+                        Arc@221540: n=220284 r=195132 flag=0x0 stem=''
+                            short.y.debug@220284: time=678739258 flags=0x104 next=0
+          Arc@226896: n=220780 r=196524 flag=0x0 stem=''
+              store.h@220780: time=678740272 flags=0x104 next=0
+          Arc@227080: n=227028 r=196524 flag=0x0 stem=''
+              errjmp.h@227028: time=678740143 flags=0x104 next=0
+   Arc@228480: n=227324 r=194832 flag=0x0 stem=''
+       const.v@227324: time=0 flags=0x104 next=0
+          Arc@227368: n=218520 r=206544 flag=0x0 stem=''
+              fns.h@218520: time=678739531 flags=0x104 next=0
+          Arc@227552: n=227496 r=195496 flag=0x0 stem='const'
+              const.c@227496: time=678739257 flags=0x104 next=0
+          Arc@227868: n=220780 r=197200 flag=0x0 stem=''
+              store.h@220780: time=678740272 flags=0x104 next=0
+          Arc@227992: n=220960 r=197200 flag=0x0 stem=''
+              node.h@220960: time=678739254 flags=0x104 next=0
+          Arc@228116: n=221144 r=197200 flag=0x0 stem=''
+              symbol.h@221144: time=678740109 flags=0x104 next=0
+          Arc@228240: n=221324 r=197200 flag=0x0 stem=''
+              ydefs.h@221324: time=678739254 flags=0x104 next=0
+                 Arc@221656: n=221380 r=195368 flag=0x0 stem=''
+                     y.tab.h@221380: time=678739994 flags=0x104 next=0
+                        Arc@221424: n=220104 r=195132 flag=0x0 stem=''
+                            squint.y@220104: time=678739967 flags=0x104 next=0
+                        Arc@221540: n=220284 r=195132 flag=0x0 stem=''
+                            short.y.debug@220284: time=678739258 flags=0x104 next=0
+          Arc@228364: n=227028 r=197200 flag=0x0 stem=''
+              errjmp.h@227028: time=678740143 flags=0x104 next=0
+   Arc@229652: n=228612 r=194832 flag=0x0 stem=''
+       declare.v@228612: time=0 flags=0x104 next=0
+          Arc@228656: n=218520 r=206612 flag=0x0 stem=''
+              fns.h@218520: time=678739531 flags=0x104 next=0
+          Arc@228844: n=228788 r=195496 flag=0x0 stem='declare'
+              declare.c@228788: time=678739254 flags=0x104 next=0
+          Arc@229164: n=220780 r=197824 flag=0x0 stem=''
+              store.h@220780: time=678740272 flags=0x104 next=0
+          Arc@229288: n=220960 r=197824 flag=0x0 stem=''
+              node.h@220960: time=678739254 flags=0x104 next=0
+          Arc@229412: n=221144 r=197824 flag=0x0 stem=''
+              symbol.h@221144: time=678740109 flags=0x104 next=0
+          Arc@229536: n=221324 r=197824 flag=0x0 stem=''
+              ydefs.h@221324: time=678739254 flags=0x104 next=0
+                 Arc@221656: n=221380 r=195368 flag=0x0 stem=''
+                     y.tab.h@221380: time=678739994 flags=0x104 next=0
+                        Arc@221424: n=220104 r=195132 flag=0x0 stem=''
+                            squint.y@220104: time=678739967 flags=0x104 next=0
+                        Arc@221540: n=220284 r=195132 flag=0x0 stem=''
+                            short.y.debug@220284: time=678739258 flags=0x104 next=0
+   Arc@231828: n=229780 r=194832 flag=0x0 stem=''
+       error.v@229780: time=0 flags=0x104 next=0
+          Arc@229824: n=218520 r=206680 flag=0x0 stem=''
+              fns.h@218520: time=678739531 flags=0x104 next=0
+          Arc@230008: n=229952 r=195496 flag=0x0 stem='error'
+              error.c@229952: time=678740601 flags=0x104 next=0
+          Arc@230324: n=220780 r=198556 flag=0x0 stem=''
+              store.h@220780: time=678740272 flags=0x104 next=0
+          Arc@230448: n=220960 r=198556 flag=0x0 stem=''
+              node.h@220960: time=678739254 flags=0x104 next=0
+          Arc@230924: n=230580 r=198556 flag=0x0 stem=''
+              nodenames.h@230580: time=678739256 flags=0x104 next=0
+                 Arc@230624: n=220960 r=208920 flag=0x0 stem=''
+                     node.h@220960: time=678739254 flags=0x104 next=0
+                 Arc@230800: n=230756 r=208920 flag=0x0 stem=''
+                     enumtoname@230756: time=678739256 flags=0x104 next=0
+          Arc@231048: n=221144 r=198556 flag=0x0 stem=''
+              symbol.h@221144: time=678740109 flags=0x104 next=0
+          Arc@231464: n=231180 r=198556 flag=0x0 stem=''
+              typenames.h@231180: time=678739256 flags=0x104 next=0
+                 Arc@231224: n=220960 r=208988 flag=0x0 stem=''
+                     node.h@220960: time=678739254 flags=0x104 next=0
+                 Arc@231340: n=230756 r=208988 flag=0x0 stem=''
+                     enumtoname@230756: time=678739256 flags=0x104 next=0
+          Arc@231588: n=227028 r=198556 flag=0x0 stem=''
+              errjmp.h@227028: time=678740143 flags=0x104 next=0
+          Arc@231712: n=221324 r=198556 flag=0x0 stem=''
+              ydefs.h@221324: time=678739254 flags=0x104 next=0
+                 Arc@221656: n=221380 r=195368 flag=0x0 stem=''
+                     y.tab.h@221380: time=678739994 flags=0x104 next=0
+                        Arc@221424: n=220104 r=195132 flag=0x0 stem=''
+                            squint.y@220104: time=678739967 flags=0x104 next=0
+                        Arc@221540: n=220284 r=195132 flag=0x0 stem=''
+                            short.y.debug@220284: time=678739258 flags=0x104 next=0
+   Arc@232972: n=231956 r=194832 flag=0x0 stem=''
+       lex.v@231956: time=0 flags=0x104 next=0
+          Arc@232000: n=218520 r=206748 flag=0x0 stem=''
+              fns.h@218520: time=678739531 flags=0x104 next=0
+          Arc@232180: n=232128 r=195496 flag=0x0 stem='lex'
+              lex.c@232128: time=678740682 flags=0x104 next=0
+          Arc@232484: n=220780 r=199208 flag=0x0 stem=''
+              store.h@220780: time=678740272 flags=0x104 next=0
+          Arc@232608: n=220960 r=199208 flag=0x0 stem=''
+              node.h@220960: time=678739254 flags=0x104 next=0
+          Arc@232732: n=221144 r=199208 flag=0x0 stem=''
+              symbol.h@221144: time=678740109 flags=0x104 next=0
+          Arc@232856: n=221324 r=199208 flag=0x0 stem=''
+              ydefs.h@221324: time=678739254 flags=0x104 next=0
+                 Arc@221656: n=221380 r=195368 flag=0x0 stem=''
+                     y.tab.h@221380: time=678739994 flags=0x104 next=0
+                        Arc@221424: n=220104 r=195132 flag=0x0 stem=''
+                            squint.y@220104: time=678739967 flags=0x104 next=0
+                        Arc@221540: n=220284 r=195132 flag=0x0 stem=''
+                            short.y.debug@220284: time=678739258 flags=0x104 next=0
+   Arc@233760: n=233100 r=194832 flag=0x0 stem=''
+       main.v@233100: time=678740777 flags=0x104 next=0
+          Arc@233144: n=218520 r=206816 flag=0x0 stem=''
+              fns.h@218520: time=678739531 flags=0x104 next=0
+          Arc@233328: n=233272 r=195496 flag=0x0 stem='main'
+              main.c@233272: time=678740697 flags=0x104 next=0
+          Arc@233644: n=227028 r=199732 flag=0x0 stem=''
+              errjmp.h@227028: time=678740143 flags=0x104 next=0
+   Arc@234920: n=233888 r=194832 flag=0x0 stem=''
+       node.v@233888: time=0 flags=0x104 next=0
+          Arc@233932: n=218520 r=206864 flag=0x0 stem=''
+              fns.h@218520: time=678739531 flags=0x104 next=0
+          Arc@234116: n=234060 r=195496 flag=0x0 stem='node'
+              node.c@234060: time=678739257 flags=0x104 next=0
+          Arc@234432: n=220780 r=200344 flag=0x0 stem=''
+              store.h@220780: time=678740272 flags=0x104 next=0
+          Arc@234556: n=220960 r=200344 flag=0x0 stem=''
+              node.h@220960: time=678739254 flags=0x104 next=0
+          Arc@234680: n=221144 r=200344 flag=0x0 stem=''
+              symbol.h@221144: time=678740109 flags=0x104 next=0
+          Arc@234804: n=221324 r=200344 flag=0x0 stem=''
+              ydefs.h@221324: time=678739254 flags=0x104 next=0
+                 Arc@221656: n=221380 r=195368 flag=0x0 stem=''
+                     y.tab.h@221380: time=678739994 flags=0x104 next=0
+                        Arc@221424: n=220104 r=195132 flag=0x0 stem=''
+                            squint.y@220104: time=678739967 flags=0x104 next=0
+                        Arc@221540: n=220284 r=195132 flag=0x0 stem=''
+                            short.y.debug@220284: time=678739258 flags=0x104 next=0
+   Arc@236092: n=235052 r=194832 flag=0x0 stem=''
+       symbol.v@235052: time=0 flags=0x104 next=0
+          Arc@235096: n=218520 r=206932 flag=0x0 stem=''
+              fns.h@218520: time=678739531 flags=0x104 next=0
+          Arc@235284: n=235228 r=195496 flag=0x0 stem='symbol'
+              symbol.c@235228: time=678739257 flags=0x104 next=0
+          Arc@235604: n=220780 r=201592 flag=0x0 stem=''
+              store.h@220780: time=678740272 flags=0x104 next=0
+          Arc@235728: n=220960 r=201592 flag=0x0 stem=''
+              node.h@220960: time=678739254 flags=0x104 next=0
+          Arc@235852: n=221144 r=201592 flag=0x0 stem=''
+              symbol.h@221144: time=678740109 flags=0x104 next=0
+          Arc@235976: n=221324 r=201592 flag=0x0 stem=''
+              ydefs.h@221324: time=678739254 flags=0x104 next=0
+                 Arc@221656: n=221380 r=195368 flag=0x0 stem=''
+                     y.tab.h@221380: time=678739994 flags=0x104 next=0
+                        Arc@221424: n=220104 r=195132 flag=0x0 stem=''
+                            squint.y@220104: time=678739967 flags=0x104 next=0
+                        Arc@221540: n=220284 r=195132 flag=0x0 stem=''
+                            short.y.debug@220284: time=678739258 flags=0x104 next=0
+   Arc@237500: n=236220 r=194832 flag=0x0 stem=''
+       type.v@236220: time=0 flags=0x104 next=0
+          Arc@236264: n=218520 r=207000 flag=0x0 stem=''
+              fns.h@218520: time=678739531 flags=0x104 next=0
+          Arc@236448: n=236392 r=195496 flag=0x0 stem='type'
+              type.c@236392: time=678739257 flags=0x104 next=0
+          Arc@236764: n=220780 r=202280 flag=0x0 stem=''
+              store.h@220780: time=678740272 flags=0x104 next=0
+          Arc@236888: n=220960 r=202280 flag=0x0 stem=''
+              node.h@220960: time=678739254 flags=0x104 next=0
+          Arc@237012: n=221144 r=202280 flag=0x0 stem=''
+              symbol.h@221144: time=678740109 flags=0x104 next=0
+          Arc@237136: n=221324 r=202280 flag=0x0 stem=''
+              ydefs.h@221324: time=678739254 flags=0x104 next=0
+                 Arc@221656: n=221380 r=195368 flag=0x0 stem=''
+                     y.tab.h@221380: time=678739994 flags=0x104 next=0
+                        Arc@221424: n=220104 r=195132 flag=0x0 stem=''
+                            squint.y@220104: time=678739967 flags=0x104 next=0
+                        Arc@221540: n=220284 r=195132 flag=0x0 stem=''
+                            short.y.debug@220284: time=678739258 flags=0x104 next=0
+          Arc@237260: n=220780 r=202280 flag=0x0 stem=''
+              store.h@220780: time=678740272 flags=0x104 next=0
+          Arc@237384: n=227028 r=202280 flag=0x0 stem=''
+              errjmp.h@227028: time=678740143 flags=0x104 next=0
+   Arc@239068: n=237628 r=194832 flag=0x0 stem=''
+       xec.v@237628: time=0 flags=0x104 next=0
+          Arc@237672: n=218520 r=207068 flag=0x0 stem=''
+              fns.h@218520: time=678739531 flags=0x104 next=0
+          Arc@237852: n=237800 r=195496 flag=0x0 stem='xec'
+              xec.c@237800: time=678740720 flags=0x104 next=0
+          Arc@238156: n=220780 r=202972 flag=0x0 stem=''
+              store.h@220780: time=678740272 flags=0x104 next=0
+          Arc@238280: n=220960 r=202972 flag=0x0 stem=''
+              node.h@220960: time=678739254 flags=0x104 next=0
+          Arc@238404: n=194900 r=202972 flag=0x0 stem=''
+              inst.h@194900: time=678739257 flags=0x104 next=0
+                 Arc@224180: n=223448 r=209512 flag=0x0 stem=''
+                     inst@223448: time=678739257 flags=0x104 next=0
+                        Arc@223548: n=223504 r=209896 flag=0x0 stem=''
+                            arith.c@223504: time=678739254 flags=0x104 next=0
+                        Arc@223720: n=223676 r=209896 flag=0x0 stem=''
+                            ctl.c@223676: time=678740970 flags=0x104 next=0
+                        Arc@223892: n=223848 r=209896 flag=0x0 stem=''
+                            proc.c@223848: time=678740761 flags=0x104 next=0
+                        Arc@224064: n=224020 r=209896 flag=0x0 stem=''
+                            var.c@224020: time=678739256 flags=0x104 next=0
+          Arc@238704: n=238536 r=202972 flag=0x0 stem=''
+              insttab.h@238536: time=678739257 flags=0x104 next=0
+                 Arc@238580: n=223448 r=209580 flag=0x0 stem=''
+                     inst@223448: time=678739257 flags=0x104 next=0
+                        Arc@223548: n=223504 r=209896 flag=0x0 stem=''
+                            arith.c@223504: time=678739254 flags=0x104 next=0
+                        Arc@223720: n=223676 r=209896 flag=0x0 stem=''
+                            ctl.c@223676: time=678740970 flags=0x104 next=0
+                        Arc@223892: n=223848 r=209896 flag=0x0 stem=''
+                            proc.c@223848: time=678740761 flags=0x104 next=0
+                        Arc@224064: n=224020 r=209896 flag=0x0 stem=''
+                            var.c@224020: time=678739256 flags=0x104 next=0
+          Arc@238828: n=223236 r=202972 flag=0x0 stem=''
+              comm.h@223236: time=678740293 flags=0x104 next=0
+          Arc@238952: n=227028 r=202972 flag=0x0 stem=''
+              errjmp.h@227028: time=678740143 flags=0x104 next=0
+   Arc@239908: n=239196 r=194832 flag=0x0 stem=''
+       arith.v@239196: time=678740871 flags=0x104 next=0
+          Arc@239240: n=218520 r=207136 flag=0x0 stem=''
+              fns.h@218520: time=678739531 flags=0x104 next=0
+          Arc@239356: n=223236 r=207592 flag=0x0 stem=''
+              comm.h@223236: time=678740293 flags=0x104 next=0
+          Arc@239472: n=220780 r=207592 flag=0x0 stem=''
+              store.h@220780: time=678740272 flags=0x104 next=0
+          Arc@239600: n=223504 r=195496 flag=0x0 stem='arith'
+              arith.c@223504: time=678739254 flags=0x104 next=0
+   Arc@240732: n=240036 r=194832 flag=0x0 stem=''
+       ctl.v@240036: time=678740977 flags=0x104 next=0
+          Arc@240080: n=218520 r=207204 flag=0x0 stem=''
+              fns.h@218520: time=678739531 flags=0x104 next=0
+          Arc@240196: n=223236 r=207640 flag=0x0 stem=''
+              comm.h@223236: time=678740293 flags=0x104 next=0
+          Arc@240312: n=220780 r=207640 flag=0x0 stem=''
+              store.h@220780: time=678740272 flags=0x104 next=0
+          Arc@240436: n=223676 r=195496 flag=0x0 stem='ctl'
+              ctl.c@223676: time=678740970 flags=0x104 next=0
+   Arc@241572: n=240860 r=194832 flag=0x0 stem=''
+       proc.v@240860: time=678741036 flags=0x104 next=0
+          Arc@240904: n=218520 r=207272 flag=0x0 stem=''
+              fns.h@218520: time=678739531 flags=0x104 next=0
+          Arc@241020: n=223236 r=207688 flag=0x0 stem=''
+              comm.h@223236: time=678740293 flags=0x104 next=0
+          Arc@241136: n=220780 r=207688 flag=0x0 stem=''
+              store.h@220780: time=678740272 flags=0x104 next=0
+          Arc@241264: n=223848 r=195496 flag=0x0 stem='proc'
+              proc.c@223848: time=678740761 flags=0x104 next=0
+   Arc@242396: n=241700 r=194832 flag=0x0 stem=''
+       var.v@241700: time=0 flags=0x104 next=0
+          Arc@241744: n=218520 r=207340 flag=0x0 stem=''
+              fns.h@218520: time=678739531 flags=0x104 next=0
+          Arc@241860: n=223236 r=207736 flag=0x0 stem=''
+              comm.h@223236: time=678740293 flags=0x104 next=0
+          Arc@241976: n=220780 r=207736 flag=0x0 stem=''
+              store.h@220780: time=678740272 flags=0x104 next=0
+          Arc@242100: n=224020 r=195496 flag=0x0 stem='var'
+              var.c@224020: time=678739256 flags=0x104 next=0
+   Arc@242512: n=239196 r=194832 flag=0x0 stem=''
+       arith.v@239196: time=678740871 flags=0x104 next=0
+          Arc@239240: n=218520 r=207136 flag=0x0 stem=''
+              fns.h@218520: time=678739531 flags=0x104 next=0
+          Arc@239356: n=223236 r=207592 flag=0x0 stem=''
+              comm.h@223236: time=678740293 flags=0x104 next=0
+          Arc@239472: n=220780 r=207592 flag=0x0 stem=''
+              store.h@220780: time=678740272 flags=0x104 next=0
+          Arc@239600: n=223504 r=195496 flag=0x0 stem='arith'
+              arith.c@223504: time=678739254 flags=0x104 next=0
+   Arc@242628: n=240036 r=194832 flag=0x0 stem=''
+       ctl.v@240036: time=678740977 flags=0x104 next=0
+          Arc@240080: n=218520 r=207204 flag=0x0 stem=''
+              fns.h@218520: time=678739531 flags=0x104 next=0
+          Arc@240196: n=223236 r=207640 flag=0x0 stem=''
+              comm.h@223236: time=678740293 flags=0x104 next=0
+          Arc@240312: n=220780 r=207640 flag=0x0 stem=''
+              store.h@220780: time=678740272 flags=0x104 next=0
+          Arc@240436: n=223676 r=195496 flag=0x0 stem='ctl'
+              ctl.c@223676: time=678740970 flags=0x104 next=0
+   Arc@242744: n=240860 r=194832 flag=0x0 stem=''
+       proc.v@240860: time=678741036 flags=0x104 next=0
+          Arc@240904: n=218520 r=207272 flag=0x0 stem=''
+              fns.h@218520: time=678739531 flags=0x104 next=0
+          Arc@241020: n=223236 r=207688 flag=0x0 stem=''
+              comm.h@223236: time=678740293 flags=0x104 next=0
+          Arc@241136: n=220780 r=207688 flag=0x0 stem=''
+              store.h@220780: time=678740272 flags=0x104 next=0
+          Arc@241264: n=223848 r=195496 flag=0x0 stem='proc'
+              proc.c@223848: time=678740761 flags=0x104 next=0
+   Arc@242860: n=241700 r=194832 flag=0x0 stem=''
+       var.v@241700: time=0 flags=0x104 next=0
+          Arc@241744: n=218520 r=207340 flag=0x0 stem=''
+              fns.h@218520: time=678739531 flags=0x104 next=0
+          Arc@241860: n=223236 r=207736 flag=0x0 stem=''
+              comm.h@223236: time=678740293 flags=0x104 next=0
+          Arc@241976: n=220780 r=207736 flag=0x0 stem=''
+              store.h@220780: time=678740272 flags=0x104 next=0
+          Arc@242100: n=224020 r=195496 flag=0x0 stem='var'
+              var.c@224020: time=678739256 flags=0x104 next=0
+   Arc@243816: n=242988 r=194832 flag=0x0 stem=''
+       libu.v@242988: time=0 flags=0x4 next=0
+          Arc@243508: n=243044 r=195496 flag=0x0 stem='libu'
+              libu.c@243044: time=678739258 flags=0x104 next=0
+                 Arc@243088: n=223236 r=208048 flag=0x0 stem=''
+                     comm.h@223236: time=678740293 flags=0x104 next=0
+                 Arc@243204: n=220780 r=208048 flag=0x0 stem=''
+                     store.h@220780: time=678740272 flags=0x104 next=0
+                 Arc@243380: n=243336 r=208048 flag=0x0 stem=''
+                     libargs.h@243336: time=678739257 flags=0x104 next=0
+   Arc@244712: n=243944 r=194832 flag=0x0 stem=''
+       libio.v@243944: time=0 flags=0x4 next=0
+          Arc@244404: n=244000 r=195496 flag=0x0 stem='libio'
+              libio.c@244000: time=678739258 flags=0x104 next=0
+                 Arc@244044: n=223236 r=208116 flag=0x0 stem=''
+                     comm.h@223236: time=678740293 flags=0x104 next=0
+                 Arc@244160: n=220780 r=208116 flag=0x0 stem=''
+                     store.h@220780: time=678740272 flags=0x104 next=0
+                 Arc@244276: n=243336 r=208116 flag=0x0 stem=''
+                     libargs.h@243336: time=678739257 flags=0x104 next=0
+   Arc@245620: n=244844 r=194832 flag=0x0 stem=''
+       liblib.v@244844: time=0 flags=0x4 next=0
+          Arc@245308: n=244904 r=195496 flag=0x0 stem='liblib'
+              liblib.c@244904: time=678739256 flags=0x104 next=0
+                 Arc@244948: n=223236 r=208184 flag=0x0 stem=''
+                     comm.h@223236: time=678740293 flags=0x104 next=0
+                 Arc@245064: n=220780 r=208184 flag=0x0 stem=''
+                     store.h@220780: time=678740272 flags=0x104 next=0
+                 Arc@245180: n=243336 r=208184 flag=0x0 stem=''
+                     libargs.h@243336: time=678739257 flags=0x104 next=0
+   Arc@246880: n=245748 r=194832 flag=0x0 stem=''
+       libg.v@245748: time=0 flags=0x4 next=0
+          Arc@246208: n=245804 r=195496 flag=0x0 stem='libg'
+              libg.c@245804: time=678739258 flags=0x104 next=0
+                 Arc@245848: n=223236 r=208252 flag=0x0 stem=''
+                     comm.h@223236: time=678740293 flags=0x104 next=0
+                 Arc@245964: n=220780 r=208252 flag=0x0 stem=''
+                     store.h@220780: time=678740272 flags=0x104 next=0
+                 Arc@246080: n=243336 r=208252 flag=0x0 stem=''
+                     libargs.h@243336: time=678739257 flags=0x104 next=0
+          Arc@246584: n=246532 r=204176 flag=0x0 stem=''
+              libgfns.h@246532: time=678739258 flags=0x104 next=0
+          Arc@246764: n=246712 r=204176 flag=0x0 stem=''
+              space.h@246712: time=678739258 flags=0x104 next=0
+   Arc@246996: n=243944 r=194832 flag=0x0 stem=''
+       libio.v@243944: time=0 flags=0x4 next=0
+          Arc@244404: n=244000 r=195496 flag=0x0 stem='libio'
+              libio.c@244000: time=678739258 flags=0x104 next=0
+                 Arc@244044: n=223236 r=208116 flag=0x0 stem=''
+                     comm.h@223236: time=678740293 flags=0x104 next=0
+                 Arc@244160: n=220780 r=208116 flag=0x0 stem=''
+                     store.h@220780: time=678740272 flags=0x104 next=0
+                 Arc@244276: n=243336 r=208116 flag=0x0 stem=''
+                     libargs.h@243336: time=678739257 flags=0x104 next=0
+   Arc@247112: n=244844 r=194832 flag=0x0 stem=''
+       liblib.v@244844: time=0 flags=0x4 next=0
+          Arc@245308: n=244904 r=195496 flag=0x0 stem='liblib'
+              liblib.c@244904: time=678739256 flags=0x104 next=0
+                 Arc@244948: n=223236 r=208184 flag=0x0 stem=''
+                     comm.h@223236: time=678740293 flags=0x104 next=0
+                 Arc@245064: n=220780 r=208184 flag=0x0 stem=''
+                     store.h@220780: time=678740272 flags=0x104 next=0
+                 Arc@245180: n=243336 r=208184 flag=0x0 stem=''
+                     libargs.h@243336: time=678739257 flags=0x104 next=0
+   Arc@248036: n=247244 r=194832 flag=0x0 stem=''
+       liblayer.v@247244: time=0 flags=0x4 next=0
+          Arc@247712: n=247304 r=195496 flag=0x0 stem='liblayer'
+              liblayer.c@247304: time=678739259 flags=0x104 next=0
+                 Arc@247348: n=223236 r=208320 flag=0x0 stem=''
+                     comm.h@223236: time=678740293 flags=0x104 next=0
+                 Arc@247464: n=220780 r=208320 flag=0x0 stem=''
+                     store.h@220780: time=678740272 flags=0x104 next=0
+                 Arc@247580: n=243336 r=208320 flag=0x0 stem=''
+                     libargs.h@243336: time=678739257 flags=0x104 next=0
+firing up job for target ydefs.h
+pid for target ydefs.h = 20334
+firing up job for target inst
+pid for target inst = 20336
+firing up job for target var.v
+vc -w var.c
+pid for target var.v = 20339
+warning: var.c:443 used and not set: r
+warning: var.c:479 used and not set: r
+var.c:559 non-ansi function declaration: donprint
+var.c:559 function args not checked: donprint
+var.c:559 incompatible types: "LONG" and "IND CHAR" for op "SUB"
+warning: var.c:555 used and not set: n
+warning: var.c:573 null return of a typed function
+warning: var.c:581 null return of a typed function
+warning: var.c:584 null return of a typed function
+warning: var.c:590 null return of a typed function
+warning: var.c:593 null return of a typed function
